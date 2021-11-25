@@ -1,36 +1,117 @@
 import { MarketOperations } from './Modals'
 import styled from 'styled-components'
-import React from 'react'
+import React, { useState } from 'react'
+import { SupportedMarket } from 'bao/lib/types'
+import BigNumber from 'bignumber.js'
+import useBao from '../../../hooks/useBao'
+import { useWallet } from 'use-wallet'
+import { useApprovals } from '../../../hooks/hard-synths/useApprovals'
+import { approvev2 } from '../../../bao/utils'
 
 type MarketButtonProps = {
 	operation: MarketOperations
+	asset: SupportedMarket
+	val: BigNumber
+	isDisabled: boolean
 }
 
-export const MarketButton = ({ operation }: MarketButtonProps) => {
-	switch (operation) {
-		case MarketOperations.supply:
-			return (
-				<ButtonStack>
-					<SubmitButton>Supply</SubmitButton>
-				</ButtonStack>
-			)
+export const MarketButton = ({
+	operation,
+	asset,
+	val,
+	isDisabled,
+}: MarketButtonProps) => {
+	const [pendingTx, setPendingTx] = useState(false)
+	const [confirmations, setConfirmations] = useState<undefined | number>()
 
-		case MarketOperations.withdraw:
-			return (
-				<ButtonStack>
-					<SubmitButton>Withdraw</SubmitButton>
-				</ButtonStack>
-			)
+	const bao = useBao()
+	const { account } = useWallet()
+	const { approvals } = useApprovals(pendingTx)
 
-		case MarketOperations.borrow:
-			return <SubmitButton>Borrow</SubmitButton>
+	const handleConfirmations = (confNo: number) => {
+		if (confNo < 15) setConfirmations(confNo)
+		else clearPendingTx()
+	}
 
-		case MarketOperations.repay:
-			return (
-				<ButtonStack>
-					<SubmitButton>Repay</SubmitButton>
-				</ButtonStack>
-			)
+	const clearPendingTx = () => {
+		setConfirmations(undefined)
+		setPendingTx(false)
+	}
+
+	if (pendingTx) {
+		return (
+			<ButtonStack>
+				<SubmitButton disabled={true}>
+					Pending Transaction
+					{confirmations && ` (${confirmations}/15 Confirmations)`}
+				</SubmitButton>
+			</ButtonStack>
+		)
+	} else {
+		switch (operation) {
+			case MarketOperations.supply:
+				return (
+					<ButtonStack>
+						{approvals && approvals[asset.underlying].gt(0) ? (
+							<SubmitButton
+								disabled={isDisabled}
+								onClick={() => {
+									// TODO: Does not work for MATIC market. Need to support chain's native asset.
+									const contract = bao.getNewContract(
+										'ctoken.json',
+										asset.token,
+									)
+									contract.methods
+										.mint(val)
+										.send({ from: account })
+										.on('confirmation', handleConfirmations)
+										.on('error', clearPendingTx)
+									setPendingTx(true)
+								}}
+							>
+								Supply
+							</SubmitButton>
+						) : (
+							<SubmitButton
+								disabled={!approvals}
+								onClick={() => {
+									const underlyingContract = bao.getNewContract(
+										'erc20.json',
+										asset.underlying,
+									)
+									const marketContract = bao.getNewContract(
+										'ctoken.json',
+										asset.token,
+									)
+									approvev2(underlyingContract, marketContract, account)
+										.on('confirmation', handleConfirmations)
+										.on('error', clearPendingTx)
+									setPendingTx(true)
+								}}
+							>
+								Approve {asset.underlyingSymbol}
+							</SubmitButton>
+						)}
+					</ButtonStack>
+				)
+
+			case MarketOperations.withdraw:
+				return (
+					<ButtonStack>
+						<SubmitButton disabled={isDisabled}>Withdraw</SubmitButton>
+					</ButtonStack>
+				)
+
+			case MarketOperations.borrow:
+				return <SubmitButton disabled={isDisabled}>Borrow</SubmitButton>
+
+			case MarketOperations.repay:
+				return (
+					<ButtonStack>
+						<SubmitButton disabled={isDisabled}>Repay</SubmitButton>
+					</ButtonStack>
+				)
+		}
 	}
 }
 
@@ -52,70 +133,36 @@ const SubmitButton = styled.button`
     outline-offset: 2px;
     width: 100%;
     line-height: 1.2;
-    font-weight: ${(props) => props.theme.fontWeight.medium};
+    font-weight: ${(props) => props.theme.fontWeight.strong};
     transition-property: all;
-    transition-duration: 200ms;
-    height: 2.5rem;
+    height: 50px;
     min-width: 2.5rem;
-    font-size: 13px;
+	font-size: ${(props) => props.theme.fontSize.default};
     padding-inline-start: 1rem;
     padding-inline-end: 1rem;
 	border: none;
 	border-bottom: 1px solid ${(props) => props.theme.color.primary[400]};
 	box-shadow: ${(props) => props.theme.boxShadow.default};
     background-color: ${(props) => props.theme.color.primary[100]};
-    text-transform: uppercase;
     outline: transparent solid 2px;
-    border-radius: .375rem;
+    border-radius: 8px;
     color: ${(props) => props.theme.color.text[100]};
     opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 	position: relative;
-	transition: .6s;
+	transition: .5s;
 	overflow: hidden;
 
     &:focus {
 		outline: 0;
 	}
 
-	&:before{
-		content: '';
-		display: block;
-		position: absolute;
-		background: ${(props) => props.theme.color.transparent[300]};
-		width: 60px;
-		height: 100%;
-		left: 0;
-		top: 0;
-		opacity: .5;
-		filter: blur(30px);
-		transform: translateX(-100px)  skewX(-15deg);
-	  }
-	  &:after{
-		content: '';
-		display: block;
-		position: absolute;
-		background: ${(props) => props.theme.color.transparent[200]};
-		width: 30px;
-		height: 100%;
-		left: 30px;
-		top: 0;
-		opacity: 0;
-		filter: blur(5px);
-		transform: translateX(-100px) skewX(-15deg);
-	  }
 	  &:hover{
-		background: ${(props) => props.theme.color.primary[100]};
+		background: ${(props) => props.theme.color.primary[200]};
+		box-shadow: ${(props) =>
+			!props.disabled
+				? props.theme.boxShadow.hover
+				: props.theme.boxShadow.default};
 		cursor: pointer;
-		&:before{
-		  transform: translateX(500px)  skewX(-15deg);  
-		  opacity: 0.6;
-		  transition: .7s;
-		}
-		&:after{
-		  transform: translateX(500px) skewX(-15deg);  
-		  opacity: 1;
-		  transition: .7s;
-		}
 	  }
 	}
 
@@ -123,8 +170,6 @@ const SubmitButton = styled.button`
 	&:focus,
 	&:active {
 		color: ${(props) => (!props.disabled ? props.color : `${props.color}`)};
-		cursor: ${(props) =>
-			props.disabled ? 'not-allowed' : 'pointer'} !important;
+		cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')} !important;
 	}
-}
 `

@@ -1,62 +1,57 @@
+import { getComptrollerContract } from 'bao/utils'
 import Table from 'components/Table'
-import Tooltipped from 'components/Tooltipped'
-import { Market } from 'contexts/Markets'
 import { commify } from 'ethers/lib/utils'
-import { useAccountBalances } from 'hooks/hard-synths/useBalances'
-import { useMarkets } from 'hooks/hard-synths/useMarkets'
+import { useAccountLiquidity } from 'hooks/hard-synths/useAccountLiquidity'
+import {
+	useAccountBalances,
+	useBorrowBalances,
+	useSupplyBalances,
+} from 'hooks/hard-synths/useBalances'
+import { useExchangeRates } from 'hooks/hard-synths/useExchangeRates'
+import { useAccountMarkets, useMarkets } from 'hooks/hard-synths/useMarkets'
 import { usePrices } from 'hooks/hard-synths/usePrices'
-import useModal from 'hooks/useModal'
+import useBao from 'hooks/useBao'
 import React, { useState } from 'react'
 import { FormCheck } from 'react-bootstrap'
+import { SupportedMarket } from '../../../bao/lib/types'
+import { decimate } from '../../../utils/numberFormat'
 import { MarketBorrowModal, MarketSupplyModal } from './Modals'
 import {
-	BorrowLimit,
-	BorrowMeter,
-	BorrowMeterContainer,
-	BorrowText, Flex, HeaderWrapper,
-	ItemContainer,
-	ItemWrapper, MarketContainer, MarketHeader, MarketHeaderContainer,
-	MarketHeaderStack, MarketHeaderSubText, MarketHeaderText, MarketHeaderWrapper,
-	MarketItemContainer,
-	MarketItemWrapper,
-	MarketSummary,
-	MarketSummaryHeader, MarketTable, OverviewContainer,
-	OverviewHeader, OverviewTableContainer, TableHeader
+	Flex,
+	HeaderWrapper,
+	ItemWrapper,
+	MarketContainer,
+	MarketHeader,
+	MarketHeaderSubText,
+	MarketHeaderText,
+	TableContainer,
 } from './styles'
-
-export const Overview: React.FC = () => {
-	return (
-		<OverviewContainer>
-			<OverviewHeader>
-				<BorrowLimit>
-					Borrow Limit <Tooltipped content={`Some info here.`} />
-				</BorrowLimit>
-				<BorrowText>0%</BorrowText>
-				<BorrowMeterContainer>
-					<BorrowMeter />
-				</BorrowMeterContainer>
-				<BorrowText>$0</BorrowText>
-			</OverviewHeader>
-		</OverviewContainer>
-	)
-}
+import { useWallet } from 'use-wallet'
 
 export const Supply: React.FC = () => {
-	const [modalAsset, setModalAsset] = useState<Market>()
-	const [handleSupply] = useModal(<MarketSupplyModal />)
+	const [modalAsset, setModalAsset] = useState<SupportedMarket>()
+	const [modalShow, setModalShow] = useState(false)
 
 	const balances = useAccountBalances()
 	const markets = useMarkets()
 
+	const handleSupply = (asset: SupportedMarket) => {
+		setModalAsset(asset)
+		setModalShow(true)
+	}
+
 	const columns = [
 		{
 			header: <HeaderWrapper>Asset</HeaderWrapper>,
-			value: (market: Market) => {
+			value(market: SupportedMarket) {
 				// underlying symbol
-				const { symbol } = balances.find(
-					(balance) =>
-						balance.address.toLowerCase() === market.underlying.toLowerCase(),
-				)
+				const balanceRes =
+					balances &&
+					balances.find(
+						(balance) =>
+							balance.address.toLowerCase() === market.underlying.toLowerCase(),
+					)
+				const symbol = balanceRes && balanceRes.symbol
 
 				return (
 					<ItemWrapper>
@@ -67,77 +62,104 @@ export const Supply: React.FC = () => {
 			},
 		},
 		{
-			header: <HeaderWrapper style={{ justifyContent: 'center', textAlign: 'center' }}>APY</HeaderWrapper>,
-			value: ({ supplyApy }: Market) => (
-				<ItemWrapper style={{ justifyContent: 'center', textAlign: 'center' }}>
-					{supplyApy ? `${supplyApy.toFixed(2)}%` : '-'}
-				</ItemWrapper>
+			header: (
+				<HeaderWrapper
+					style={{ justifyContent: 'center', textAlign: 'center' }}
+				>
+					APY
+				</HeaderWrapper>
 			),
+			value({ supplyApy }: SupportedMarket) {
+				return (
+					<ItemWrapper
+						style={{ justifyContent: 'center', textAlign: 'center' }}
+					>
+						{supplyApy ? `${supplyApy.toFixed(2)}%` : '-'}
+					</ItemWrapper>
+				)
+			},
 		},
 		{
-			header: <HeaderWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>Wallet</HeaderWrapper>,
-			value: (market: Market) => {
+			header: (
+				<HeaderWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
+					Wallet
+				</HeaderWrapper>
+			),
+			value(market: SupportedMarket) {
 				// underlying balance & symbol
-				const { balance, symbol } = balances.find(
-					(balance) =>
-						balance.address.toLowerCase() === market.underlying.toLowerCase(),
-				)
+				const balanceRes =
+					balances &&
+					balances.find(
+						(balance) =>
+							balance.address.toLowerCase() === market.underlying.toLowerCase(),
+					)
+				const balance = balanceRes ? balanceRes.balance : 0
+				const symbol = balanceRes && balanceRes.symbol
 
-				return <ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>{`${balance.toFixed(2)} ${symbol}`}</ItemWrapper>
-			}
-		}
+				return (
+					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
+						{`${balance.toFixed(2)} ${symbol}`}
+					</ItemWrapper>
+				)
+			},
+		},
 	]
 
 	return (
 		<>
 			<Flex>
 				<MarketContainer>
-					<MarketHeaderContainer>
-						<MarketHeaderStack>
-							<MarketHeader>
-								<Flex>
-									<MarketHeaderText>Supply</MarketHeaderText>
-								</Flex>
-								<Flex>
-									<MarketHeaderSubText>
-										Earn interest on your deposits
-									</MarketHeaderSubText>
-								</Flex>
-							</MarketHeader>
-						</MarketHeaderStack>
-					</MarketHeaderContainer>
-					<Table columns={columns} items={markets} />
+					<MarketHeader>
+						<Flex>
+							<MarketHeaderText>Supply</MarketHeaderText>
+						</Flex>
+						<Flex>
+							<MarketHeaderSubText>
+								Earn interest on your deposits
+							</MarketHeaderSubText>
+						</Flex>
+					</MarketHeader>
+					<TableContainer>
+						<Table columns={columns} items={markets} onClick={handleSupply} />
+						{modalAsset && (
+							<MarketSupplyModal
+								asset={modalAsset}
+								show={modalShow}
+								onHide={() => setModalShow(false)}
+							/>
+						)}
+					</TableContainer>
 				</MarketContainer>
 			</Flex>
 		</>
 	)
 }
 
-type Prices = {
-	prices: {
-		[key: string]: {
-			usd: number
-		}
-	}
-}
-
 export const Borrow = () => {
-	const [handleBorrow] = useModal(<MarketBorrowModal />)
-	const [modalAsset, setModalAsset] = useState<Market>()
+	const [modalAsset, setModalAsset] = useState<SupportedMarket>()
+	const [modalShow, setModalShow] = useState(false)
 
 	const balances = useAccountBalances()
 	const markets = useMarkets()
 	const { prices } = usePrices()
 
+	const handleBorrow = (asset: SupportedMarket) => {
+		setModalAsset(asset)
+		setModalShow(true)
+	}
+
 	const columns = [
 		{
 			header: <HeaderWrapper>Asset</HeaderWrapper>,
-			value: (market: Market) => {
+			value(market: SupportedMarket) {
 				// underlying symbol
-				const { symbol } = balances.find(
-					(balance) =>
-						balance.address.toLowerCase() === market.underlying.toLowerCase(),
-				)
+				const balanceRes =
+					balances &&
+					balances.find(
+						(balance) =>
+							balance.address.toLowerCase() === market.underlying.toLowerCase(),
+					)
+				const symbol = balanceRes && balanceRes.symbol
 
 				return (
 					<ItemWrapper>
@@ -148,23 +170,44 @@ export const Borrow = () => {
 			},
 		},
 		{
-			header: <HeaderWrapper style={{ justifyContent: 'center', textAlign: 'center' }}>APR</HeaderWrapper>,
-			value: ({ borrowApy }: Market) => (
-				<ItemWrapper style={{ justifyContent: 'center', textAlign: 'center' }}>
-					{borrowApy ? `${borrowApy.toFixed(2)}%` : '-'}
-				</ItemWrapper>
+			header: (
+				<HeaderWrapper
+					style={{ justifyContent: 'center', textAlign: 'center' }}
+				>
+					APR
+				</HeaderWrapper>
 			),
+			value({ borrowApy }: SupportedMarket) {
+				return (
+					<ItemWrapper
+						style={{ justifyContent: 'center', textAlign: 'center' }}
+					>
+						{borrowApy ? `${borrowApy.toFixed(2)}%` : '-'}
+					</ItemWrapper>
+				)
+			},
 		},
 		{
-			header: <HeaderWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>Liquidity</HeaderWrapper>,
-			value: (market: Market) => (
-				// underlying balance & symbol
-				<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
-					{market.liquidity && prices
-						? `$${commify(((market.liquidity * (prices[market.coingeckoId]?.usd || 1)) / 1e6).toFixed(2))}M`
-						: '-'}
-				</ItemWrapper>
+			header: (
+				<HeaderWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
+					Liquidity
+				</HeaderWrapper>
 			),
+			value(market: SupportedMarket) {
+				return (
+					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
+						{market.liquidity && prices
+							? `$${commify(
+									(
+										(market.liquidity *
+											(prices[market.coingeckoId]?.usd || 1)) /
+										1e6
+									).toFixed(2),
+							  )}M`
+							: '-'}
+					</ItemWrapper>
+				)
+			},
 		},
 	]
 
@@ -172,21 +215,22 @@ export const Borrow = () => {
 		<>
 			<Flex>
 				<MarketContainer>
-					<MarketHeaderContainer>
-						<MarketHeaderStack>
-							<MarketHeader>
-								<Flex>
-									<MarketHeaderText>Borrow</MarketHeaderText>
-								</Flex>
-								<Flex>
-									<MarketHeaderSubText>
-										Borrow against your supplied collateral
-									</MarketHeaderSubText>
-								</Flex>
-							</MarketHeader>
-						</MarketHeaderStack>
-					</MarketHeaderContainer>
-					<Table columns={columns} items={markets} />
+					<MarketHeader>
+						<MarketHeaderText>Borrow</MarketHeaderText>
+						<MarketHeaderSubText>
+							Borrow against your supplied collateral
+						</MarketHeaderSubText>
+					</MarketHeader>
+					<TableContainer>
+						<Table columns={columns} items={markets} onClick={handleBorrow} />
+						{modalAsset && (
+							<MarketBorrowModal
+								asset={modalAsset}
+								show={modalShow}
+								onHide={() => setModalShow(false)}
+							/>
+						)}
+					</TableContainer>
 				</MarketContainer>
 			</Flex>
 		</>
@@ -194,177 +238,258 @@ export const Borrow = () => {
 }
 
 export const Supplied: React.FC = () => {
+	const bao = useBao()
+	const markets = useMarkets()
+	const { account } = useWallet()
 
-	const [handleSupply] = useModal(<MarketSupplyModal />,)
+	const balances = useSupplyBalances()
+	const { exchangeRates } = useExchangeRates()
+	const accountMarkets = useAccountMarkets()
 
+	const [modalAsset, setModalAsset] = useState<SupportedMarket>()
+	const [modalShow, setModalShow] = useState(false)
+
+	const handleSupply = (asset: SupportedMarket) => {
+		setModalAsset(asset)
+		setModalShow(true)
+	}
+
+	const columns = [
+		{
+			header: <HeaderWrapper>Asset</HeaderWrapper>,
+			value(market: SupportedMarket) {
+				// underlying symbol
+
+				return (
+					<ItemWrapper>
+						<img src={market.icon} />
+						<p>{market.underlyingSymbol}</p>
+					</ItemWrapper>
+				)
+			},
+		},
+		{
+			header: (
+				<HeaderWrapper
+					style={{ justifyContent: 'center', textAlign: 'center' }}
+				>
+					APY
+				</HeaderWrapper>
+			),
+			value({ supplyApy }: SupportedMarket) {
+				return (
+					<ItemWrapper
+						style={{ justifyContent: 'center', textAlign: 'center' }}
+					>
+						{supplyApy ? `${supplyApy.toFixed(2)}%` : '-'}
+					</ItemWrapper>
+				)
+			},
+		},
+		{
+			header: (
+				<HeaderWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
+					Balance
+				</HeaderWrapper>
+			),
+			value({ token, underlyingSymbol }: SupportedMarket) {
+				// underlying balance & symbol
+				const balanceRes =
+					balances &&
+					balances.find(
+						(balance) => balance.address.toLowerCase() === token.toLowerCase(),
+					)
+				const balance = balanceRes ? balanceRes.balance : 0
+				const exchangeRate = decimate(exchangeRates[token])
+				const suppliedBalance = balance * exchangeRate.toNumber()
+
+				return (
+					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
+						{`${suppliedBalance.toFixed(2)} ${underlyingSymbol}`}
+					</ItemWrapper>
+				)
+			},
+		},
+		{
+			header: (
+				<HeaderWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
+					Collateral
+				</HeaderWrapper>
+			),
+			value(market: SupportedMarket) {
+				const isEnabled =
+				accountMarkets &&
+				accountMarkets.find((_market) => _market.token === market.token)
+				
+				return (
+					<ItemWrapper
+						style={{ justifyContent: 'center', textAlign: 'center' }}
+						onClick={(event: React.MouseEvent<HTMLElement>) => {
+							event.stopPropagation()
+							const contract = getComptrollerContract(bao)
+							if (isEnabled) {
+								contract.methods
+									.exitMarket(market.token)
+									.send({ from: account })
+							} else {
+								contract.methods
+									.enterMarkets([market.token])
+									.send({ from: account })
+							}
+						}}
+					>
+						<FormCheck type="switch" id="custom-switch" checked={!!isEnabled} />
+					</ItemWrapper>
+				)
+			},
+		},
+	]
 
 	return (
 		<>
-			<OverviewTableContainer>
-				<MarketTable>
-					<TableHeader>
-						<HeaderWrapper>Asset</HeaderWrapper>
-						<HeaderWrapper
-							style={{ justifyContent: 'center', textAlign: 'center' }}
-						>
-							APY
-						</HeaderWrapper>
-						<HeaderWrapper
-							style={{ justifyContent: 'center', textAlign: 'center' }}
-						>
-							Balance
-						</HeaderWrapper>
-						<HeaderWrapper
-							style={{ justifyContent: 'flex-end', textAlign: 'end' }}
-						>
-							Collateral
-						</HeaderWrapper>
-					</TableHeader>
-					<ItemContainer onClick={handleSupply}>
-						<ItemWrapper>
-							<img src="USDC.png" />
-							<p>USDC</p>
-						</ItemWrapper>
-						<ItemWrapper
-							style={{
-								justifyContent: 'center',
-								textAlign: 'center',
-							}}
-						>
-							5.00%
-						</ItemWrapper>
-						<ItemWrapper
-							style={{
-								justifyContent: 'flex-end',
-								textAlign: 'end',
-							}}
-						>
-							500 USDC
-						</ItemWrapper>
-						<ItemWrapper
-							style={{
-								justifyContent: 'flex-end',
-								textAlign: 'end',
-							}}
-						>
-							<FormCheck type="switch" id="custom-switch" />
-						</ItemWrapper>
-					</ItemContainer>
-					<MarketSummary>
-						<MarketSummaryHeader>
-							<MarketHeaderWrapper
-								style={{
-									justifyContent: 'flex-start',
-									textAlign: 'start',
-								}}
-							>
-								Total Collateral
-							</MarketHeaderWrapper>
-							<MarketHeaderWrapper
-								style={{
-									justifyContent: 'flex-end',
-									textAlign: 'end',
-								}}
-							>
-								Net APY
-							</MarketHeaderWrapper>
-						</MarketSummaryHeader>
-						<MarketItemContainer>
-							<MarketItemWrapper
-								style={{ justifyContent: 'flex-start', textAlign: 'start' }}
-							>
-								$500
-							</MarketItemWrapper>
-							<MarketItemWrapper
-								style={{ justifyContent: 'flex-end', textAlign: 'end' }}
-							>
-								5.00%
-							</MarketItemWrapper>
-						</MarketItemContainer>
-					</MarketSummary>{' '}
-				</MarketTable>
-			</OverviewTableContainer>
+			<Flex>
+				<MarketContainer style={{ paddingTop: '16px' }}>
+					<TableContainer>
+						<Table
+							columns={columns}
+							items={
+								markets &&
+								balances &&
+								exchangeRates &&
+								markets.filter(
+									(market: SupportedMarket) =>
+										balances.find(
+											(balance) => balance.address === market.token,
+										) &&
+										balances.find((balance) => balance.address === market.token)
+											.balance *
+											exchangeRates[market.token].toNumber() >=
+											0.01,
+								)
+							}
+							onClick={handleSupply}
+						/>
+						{modalAsset && (
+							<MarketSupplyModal
+								asset={modalAsset}
+								show={modalShow}
+								onHide={() => setModalShow(false)}
+							/>
+						)}
+					</TableContainer>
+				</MarketContainer>
+			</Flex>
 		</>
 	)
 }
 
 export const Borrowed: React.FC = () => {
+	const markets = useMarkets()
+	const accountLiquidity = useAccountLiquidity()
+	const balances = useBorrowBalances()
+	const { exchangeRates } = useExchangeRates()
 
-	const [handleBorrow] = useModal(<MarketBorrowModal />)
+	const [modalAsset, setModalAsset] = useState<SupportedMarket>()
+	const [modalShow, setModalShow] = useState(false)
+
+	const handleBorrow = (asset: SupportedMarket) => {
+		setModalAsset(asset)
+		setModalShow(true)
+	}
+
+	const columns = [
+		{
+			header: <HeaderWrapper>Asset</HeaderWrapper>,
+			value(market: SupportedMarket) {
+				return (
+					<ItemWrapper>
+						<img src={market.icon} />
+						<p>{market.underlyingSymbol}</p>
+					</ItemWrapper>
+				)
+			},
+		},
+		{
+			header: (
+				<HeaderWrapper
+					style={{ justifyContent: 'center', textAlign: 'center' }}
+				>
+					APR
+				</HeaderWrapper>
+			),
+			value({ borrowApy }: SupportedMarket) {
+				return (
+					<ItemWrapper
+						style={{ justifyContent: 'center', textAlign: 'center' }}
+					>
+						{borrowApy ? `${borrowApy.toFixed(2)}%` : '-'}
+					</ItemWrapper>
+				)
+			},
+		},
+		{
+			header: (
+				<HeaderWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
+					Balance
+				</HeaderWrapper>
+			),
+			value(market: SupportedMarket) {
+				// underlying balance
+				const balanceRes =
+					balances &&
+					balances.find(
+						(balance) =>
+							balance.address.toLowerCase() === market.token.toLowerCase(),
+					)
+				const { balance } = balanceRes || { balance: 0 }
+
+				return (
+					<ItemWrapper style={{ justifyContent: 'flex-end', textAlign: 'end' }}>
+						{`${balance.toFixed(2)} ${market.underlyingSymbol}`}
+					</ItemWrapper>
+				)
+			},
+		},
+	]
 
 	return (
 		<>
-			<OverviewTableContainer>
-				<MarketTable>
-					<TableHeader>
-						<HeaderWrapper>Asset</HeaderWrapper>
-						<HeaderWrapper
-							style={{ justifyContent: 'center', textAlign: 'center' }}
-						>
-							APR
-						</HeaderWrapper>
-						<HeaderWrapper
-							style={{ justifyContent: 'flex-end', textAlign: 'end' }}
-						>
-							Balance
-						</HeaderWrapper>
-					</TableHeader>
-					<ItemContainer onClick={handleBorrow}>
-						<ItemWrapper>
-							<img src="USDC.png" />
-							<p>USDC</p>
-						</ItemWrapper>
-						<ItemWrapper
-							style={{
-								justifyContent: 'center',
-								textAlign: 'center',
-							}}
-						>
-							5.00%
-						</ItemWrapper>
-						<ItemWrapper
-							style={{
-								justifyContent: 'flex-end',
-								textAlign: 'end',
-							}}
-						>
-							500 USDC
-						</ItemWrapper>
-					</ItemContainer>
-					<MarketSummary>
-						<MarketSummaryHeader>
-							<MarketHeaderWrapper
-								style={{
-									justifyContent: 'flex-start',
-									textAlign: 'start',
-								}}
-							>
-								Total Debt
-							</MarketHeaderWrapper>
-							<MarketHeaderWrapper
-								style={{
-									justifyContent: 'flex-end',
-									textAlign: 'end',
-								}}
-							>
-								Net APR
-							</MarketHeaderWrapper>
-						</MarketSummaryHeader>
-						<MarketItemContainer>
-							<MarketItemWrapper
-								style={{ justifyContent: 'flex-start', textAlign: 'start' }}
-							>
-								$500
-							</MarketItemWrapper>
-							<MarketItemWrapper
+			<Flex>
+				<MarketContainer style={{ paddingTop: '16px' }}>
+					<TableContainer>
+						{accountLiquidity ? (
+							<Table
+								columns={columns}
+								items={markets.filter(
+									(market: SupportedMarket) =>
+										balances.find(
+											(balance) => balance.address === market.token,
+										) &&
+										balances.find((balance) => balance.address === market.token)
+											.balance *
+											exchangeRates[market.token].toNumber() >=
+											0.01,
+								)}
+								onClick={handleBorrow}
+							/>
+						) : (
+							<ItemWrapper
 								style={{ justifyContent: 'flex-end', textAlign: 'end' }}
 							>
-								5.00%
-							</MarketItemWrapper>
-						</MarketItemContainer>
-					</MarketSummary>
-				</MarketTable>
-			</OverviewTableContainer>
+								{' '}
+								You don't have any borrowed assets.{' '}
+							</ItemWrapper>
+						)}
+						{modalAsset && (
+							<MarketBorrowModal
+								asset={modalAsset}
+								show={modalShow}
+								onHide={() => setModalShow(false)}
+							/>
+						)}
+					</TableContainer>
+				</MarketContainer>
+			</Flex>
 		</>
 	)
 }

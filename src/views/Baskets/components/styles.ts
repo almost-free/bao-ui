@@ -25,8 +25,7 @@ export const ListLabelContainer = styled.div`
 `
 
 export const ListItemContainer = styled.div`
-  background: ${(props) => props.theme.color.primary[200]};
-  box-shadow: ${(props) => props.theme.boxShadow.hover};
+  background: ${(props) => props.theme.color.primary[100]};
   border-radius: ${(props) => props.theme.borderRadius}px;
   padding: ${(props) => props.theme.spacing[4]}px;
   display: block;
@@ -146,7 +145,7 @@ export const AssetImage = styled(BasketImage)`
   margin: 0 0 -${(props) => props.theme.spacing[3]}px -${(props) =>
       props.theme.spacing[3]}px;
   vertical-align: super;
-  transition: 200ms;
+  transition: .5s;
   user-select: none;
   -webkit-user-drag: none;
 

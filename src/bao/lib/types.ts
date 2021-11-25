@@ -1,4 +1,3 @@
-import { MarketComponent } from 'contexts/Markets/types'
 import { Contract } from 'web3-eth-contract'
 
 export interface SupportedPool {
@@ -42,6 +41,7 @@ export interface SupportedMarket {
     [network: number]: string
   }
   symbol: string
+  underlyingSymbol?: string
   icon: string
   coingeckoId: string
   decimals: number

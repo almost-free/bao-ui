@@ -37,10 +37,9 @@ a:focus {
 
 .baoTicker {
   color: #50251c;
-  background-color: #e7dfda !important;
+  background-color: #efeae7 !important;
   padding: 1rem;
-  border-radius: 0.75rem;
-  box-shadow: inset 1px 1px 3px rgba(154, 147, 140, 0.5), 1px 1px 3px rgba(255, 255, 255, 1);
+  border-radius: 8px;
 }
 
 .outline-primary {
@@ -74,4 +73,80 @@ a:focus {
 ::selection {
   background-color: #50251c;
   color: #fff;
+}
+
+.buttonActive {
+  color: #50251c;
+  background-color: #efeae7;
+  box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 1), 1px 1px 3px rgba(154, 147, 140, 0.5);
+  border: none;
+}
+
+.buttonActive:hover {
+  box-shadow: inset 1px 1px 3px rgba(154, 147, 140, 0.5), 1px 1px 3px rgba(255, 255, 255, 1);
+  color: #f57d14;
+  background-color: #efeae7;
+}
+
+.buttonInactive {
+  color: #ce6509;
+  background-color: #e7dfda;
+  box-shadow: inset 1px 1px 3px rgba(154, 147, 140, 0.5), 1px 1px 3px rgba(255, 255, 255, 1);
+  border: none;
+}
+
+.modal-content {
+  background-color: #efeae7 !important;
+  box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 1), 1px 1px 3px rgba(154, 147, 140, 0.5);
+  border: 1px solid #e7dfda;
+  border-radius: 8px;
+}
+
+.modal-header {
+  border-bottom: 1px solid #cebfb6;
+}
+
+.modal-footer {
+  border-top: 1px solid #cebfb6;
+}
+
+.btn {
+  border: none !important;
+  outline: none !important;
+}
+
+.btn:active {
+  border: none !important;
+  outline: none !important;
+}
+
+.btn-close {
+  color: #50251c;
+  background-color: #efeae7;
+  box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 1), 1px 1px 3px rgba(154, 147, 140, 0.5);
+  border: none;
+}
+
+.btn-close:hover {
+  box-shadow: inset 1px 1px 3px rgba(154, 147, 140, 0.5), 1px 1px 3px rgba(255, 255, 255, 1);
+  background-color: #e7dfda;
+  transition: .5s
+}
+
+.btn-close:active {
+  box-shadow: inset 1px 1px 3px rgba(154, 147, 140, 0.5), 1px 1px 3px rgba(255, 255, 255, 1);
+  background-color: #e7dfda;
+  transition: .5s
+}
+
+.form-check-input:checked {
+  background-color: #50251c;
+  border-color: #50251c;
+  cursor: pointer;
+}
+
+.form-check-input {
+  background-color: #cebfb6;
+  border: 1px solid #cebfb6;
+  cursor: pointer;
 }

@@ -1,10 +1,33 @@
+import React, { useCallback, useState } from 'react'
+import { SupportedMarket } from 'bao/lib/types'
 import { NavButtons } from 'components/Button'
 import { BalanceInput } from 'components/Input'
-import { ModalProps } from 'components/Modal'
-import NewModal from 'components/NewModal'
-import React, { useCallback, useState } from 'react'
-import styled from 'styled-components'
+import { Modal, ModalProps } from 'react-bootstrap'
+import {
+	useAccountBalances,
+	useSupplyBalances,
+} from 'hooks/hard-synths/useBalances'
+import { useAccountLiquidity } from '../../../hooks/hard-synths/useAccountLiquidity'
+import { useExchangeRates } from 'hooks/hard-synths/useExchangeRates'
+import { useMarketPrices } from 'hooks/hard-synths/usePrices'
+import useBao from 'hooks/useBao'
+import BigNumber from 'bignumber.js'
 import { MarketButton } from './MarketButton'
+import { MarketStats } from './Stats'
+import { decimate, exponentiate } from '../../../utils/numberFormat'
+import {
+	HeaderWrapper,
+	ModalStack,
+	InputStack,
+	LabelFlex,
+	LabelStack,
+	MaxLabel,
+	AssetLabel,
+	AssetStack,
+	IconFlex,
+} from './styles'
+import { CloseButton } from 'components/TopBar/components/AccountModal'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export enum MarketOperations {
 	supply = 'Supply',
@@ -13,172 +36,184 @@ export enum MarketOperations {
 	repay = 'Repay',
 }
 
-const MarketModal = ({
-	onDismiss,
-	operations,
-}: ModalProps & { operations: MarketOperations[] }) => {
+type MarketModalProps = ModalProps & {
+	asset: SupportedMarket
+	show: boolean
+	onHide: () => void
+}
 
-	const [val, setVal] = useState('')
+const MarketModal = ({
+	operations,
+	asset,
+	show,
+	onHide,
+}: MarketModalProps & { operations: MarketOperations[] }) => {
 	const [operation, setOperation] = useState(operations[0])
-	const [amount, setAmount] = useState<string>('')
+	const [val, setVal] = useState<string>('')
+	const bao = useBao()
+	const balances = useAccountBalances()
+	const supplyBalances = useSupplyBalances()
+	const { prices } = useMarketPrices()
+	const accountLiquidity = useAccountLiquidity()
+	const { exchangeRates } = useExchangeRates()
+
+	const max = () => {
+		switch (operation) {
+			case MarketOperations.supply:
+				return balances
+					? balances.find(
+						(_balance) =>
+							_balance.address.toLowerCase() ===
+							asset.underlying.toLowerCase(),
+					).balance
+					: 0
+			case MarketOperations.withdraw:
+				const supply =
+					supplyBalances && exchangeRates
+						? supplyBalances.find(
+							(_balance) =>
+								_balance.address.toLowerCase() === asset.token.toLowerCase(),
+						).balance * exchangeRates[asset.token].toNumber()
+						: 0
+				const withdrawable =
+					prices && accountLiquidity
+						? accountLiquidity.usdBorrowable /
+						(asset.collateralFactor *
+							decimate(
+								prices[asset.token],
+								new BigNumber(36).minus(asset.decimals),
+							).toNumber())
+						: 0
+				return !(accountLiquidity && accountLiquidity.usdBorrowable) ||
+					withdrawable > supply
+					? supply
+					: withdrawable
+			case MarketOperations.borrow:
+				return prices && accountLiquidity
+					? accountLiquidity.usdBorrowable /
+					decimate(
+						prices[asset.token],
+						new BigNumber(36).minus(asset.decimals),
+					).toNumber()
+					: 0
+			case MarketOperations.repay:
+				return balances
+					? balances.find(
+						(balances) => balances.address === asset.underlying || 'ETH',
+					).balance
+					: 0
+		}
+	}
+
+	const maxLabel = () => {
+		switch (operation) {
+			case MarketOperations.supply:
+				return 'Wallet'
+			case MarketOperations.withdraw:
+				return 'Withdrawable'
+			case MarketOperations.borrow:
+				return 'Borrowable'
+			case MarketOperations.repay:
+				return 'Wallet'
+		}
+	}
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
-			setVal(e.currentTarget.value)
+			if (e.currentTarget.value.length < 20) setVal(e.currentTarget.value)
 		},
 		[setVal],
 	)
 
 	return (
-		<NewModal
-			header={
-				<HeaderWrapper>
-					<img src="USDC.png" />
-					<p>USDC</p>
-				</HeaderWrapper>
-			}
-			footer={<MarketButton operation={operation} />}
-		>
-			<ModalStack>
-				<NavButtons
-					options={operations}
-					active={operation}
-					onClick={setOperation}
-				/>
-				<InputStack>
-					<LabelFlex>
-						<LabelStack>
-							<MaxLabel>Wallet:</MaxLabel>
-							<AssetLabel>500.000 USDC</AssetLabel>
-						</LabelStack>
-					</LabelFlex>
-
-					<BalanceInput
-						value={amount}
-						onChange={handleChange}
-						onMaxClick={() => setAmount}
-						label={
-							<AssetStack>
-								<IconFlex>
-									<img src="USDC.png" />
-								</IconFlex>
-								<p>USDC</p>
-							</AssetStack>
-						}
+		<Modal class="marketModal" show={show} onHide={onHide} centered>
+			<CloseButton onClick={onHide}>
+				<FontAwesomeIcon icon="window-close" />
+			</CloseButton>
+			<Modal.Header>
+				<Modal.Title id="contained-modal-title-vcenter">
+					<HeaderWrapper>
+						<img src={asset.icon} />
+						<p>{asset.underlyingSymbol}</p>
+					</HeaderWrapper>
+				</Modal.Title>
+			</Modal.Header>
+			<Modal.Body>
+				<ModalStack>
+					<NavButtons
+						options={operations}
+						active={operation}
+						onClick={setOperation}
 					/>
-				</InputStack>
-			</ModalStack>
-		</NewModal>
+					<InputStack>
+						<LabelFlex>
+							<LabelStack>
+								<MaxLabel>{`${maxLabel()}:`}</MaxLabel>
+								<AssetLabel>
+									{`${Math.floor(max() * 1e8) / 1e8} ${asset.underlyingSymbol}`}
+								</AssetLabel>
+							</LabelStack>
+						</LabelFlex>
+
+						<BalanceInput
+							value={val}
+							onChange={handleChange}
+							onMaxClick={() =>
+								setVal((Math.floor(max() * 1e8) / 1e8).toString())
+							}
+							label={
+								<AssetStack>
+									<IconFlex>
+										<img src={asset.icon} />
+									</IconFlex>
+									<p>{asset.underlyingSymbol}</p>
+								</AssetStack>
+							}
+						/>
+					</InputStack>
+					<MarketStats operation={operation} asset={asset} amount={val} />
+				</ModalStack>
+			</Modal.Body>
+			<Modal.Footer>
+				<MarketButton
+					operation={operation}
+					asset={asset}
+					val={
+						val && !isNaN(val as any)
+							? exponentiate(val, asset.decimals)
+							: new BigNumber(0)
+					}
+					isDisabled={
+						!val || !bao || isNaN(val as any) || parseFloat(val) > max()
+					}
+				/>
+			</Modal.Footer>
+		</Modal>
 	)
 }
 
-export const MarketSupplyModal = ({ }: ModalProps) => (
+export const MarketSupplyModal = ({
+	show,
+	onHide,
+	asset,
+}: MarketModalProps) => (
 	<MarketModal
 		operations={[MarketOperations.supply, MarketOperations.withdraw]}
+		asset={asset}
+		show={show}
+		onHide={onHide}
 	/>
 )
 
-export const MarketBorrowModal = ({ }: ModalProps) => (
-	<MarketModal operations={[MarketOperations.borrow, MarketOperations.repay]} />
+export const MarketBorrowModal = ({
+	show,
+	onHide,
+	asset,
+}: MarketModalProps) => (
+	<MarketModal
+		operations={[MarketOperations.borrow, MarketOperations.repay]}
+		asset={asset}
+		show={show}
+		onHide={onHide}
+	/>
 )
-
-const HeaderWrapper = styled.div`
-	display: flex;
-	align-items: center;
-	flex-direction: row;
-	min-width: 6rem;
-
-	img {
-		vertical-align: middle;
-		height: 2rem;
-		width: 2rem;
-	}
-
-	p {
-		display: block;
-		margin-block-start: 1em;
-		margin-block-end: 1em;
-		margin: 0px;
-		margin-top: 0px;
-		margin-inline: 0.5rem 0px;
-		margin-bottom: 0px;
-		color: ${(props) => props.theme.color.text[100]};
-		font-size: 1.25rem;
-		font-weight: ${(props) => props.theme.fontWeight.medium};
-	}
-`
-
-const ModalStack = styled.div`
-	display: flex;
-	flex-direction: column;
-	padding: 1rem;
-	width: 100%;
-`
-
-const InputStack = styled.div`
-	display: flex;
-	-webkit-box-align: center;
-	align-items: center;
-	flex-direction: column;
-	margin-top: 1rem;
-	margin-inline: 0px;
-	margin-bottom: 0px;
-`
-
-const LabelFlex = styled.div`
-	display: flex;
-	align-items: flex-end;
-	justify-content: flex-end;
-	width: 100%;
-`
-
-const LabelStack = styled.div`
-	display: flex;
-	align-items: flex-end;
-	flex-direction: row;
-`
-
-const MaxLabel = styled.p`
-	color: ${(props) => props.theme.color.text[200]};
-	font-size: 0.875rem;
-	font-weight: ${(props) => props.theme.fontWeight.medium};
-	margin-bottom: 0px;
-`
-
-const AssetLabel = styled.p`
-	color: ${(props) => props.theme.color.text[100]};
-	font-size: 0.875rem;
-	font-weight: ${(props) => props.theme.fontWeight.medium};
-	margin-inline-start: 0.25rem;
-	margin-bottom: 0px;
-`
-
-const AssetStack = styled.div`
-	display: flex;
-	align-items: center;
-	flex-direction: row;
-	padding-left: 0.5rem;
-	padding-right: 1rem;
-
-	p {
-		margin-top: 0px;
-		margin-inline: 0.5rem 0px;
-		margin-bottom: 0px;
-		color: ${(props) => props.theme.color.text[100]};
-		text-align: center;
-		font-size: 1.125rem;
-		font-weight: ${(props) => props.theme.fontWeight.medium};
-	}
-`
-
-const IconFlex = styled.div`
-	display: flex;
-	width: 1.25rem;
-
-	img {
-		display: block;
-		vertical-align: middle;
-		width: 1.25rem;
-		height: 1.25rem;
-	}
-`

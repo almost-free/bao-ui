@@ -20,6 +20,7 @@ export const MarketHeaderContainer = styled.div`
   justify-content: space-between;
   min-height: 3.5rem;
   width: 100%;
+  padding: 24px;
 `
 
 export const MarketHeaderStack = styled.div`
@@ -56,14 +57,13 @@ export const MarketHeaderSubText = styled.a`
   margin: 0;
 `
 
-export const MarketTableContainer = styled.div`
+export const TableContainer = styled.div`
   display: flex;
   width: 100%;
   border-radius: 8px;
   margin-top: ${(props) => props.theme.spacing[3]}px;
   padding: ${(props) => props.theme.spacing[3]}px;
-  background-color: ${(props) => props.theme.color.primary[200]};
-  box-shadow: ${(props) => props.theme.boxShadow.hover};
+  background-color: ${(props) => props.theme.color.primary[100]};
   border: ${(props) => props.theme.border.default};
 `
 
@@ -95,14 +95,9 @@ export const TableHeader = styled.div`
   font-weight: ${(props) => props.theme.fontWeight.strong};
 `
 
-export const HeaderWrapper = styled.div`
-  display: flex;
-  min-width: 6rem;
-`
-
 export const ItemContainer = styled.div`
     transition-property: all;
-    transition-duration: 150ms;
+    transition-duration: .5s;
     transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
     display: flex;
     align-items: center;
@@ -118,14 +113,14 @@ export const ItemContainer = styled.div`
     cursor: pointer;
 
     &:hover {
-        background-color: ${(props) => props.theme.color.primary[400]};
+        background-color: ${(props) => props.theme.color.primary[300]};
     }
 
         &:nth-child(odd){
-          background-color: ${(props) => props.theme.color.primary[300]};
+          background-color: ${(props) => props.theme.color.primary[200]};
 
           &:hover {
-            background-color: ${(props) => props.theme.color.primary[400]};
+            background-color: ${(props) => props.theme.color.primary[300]};
         }
         }
 `
@@ -153,6 +148,103 @@ export const ItemWrapper = styled.div`
     color: ${(props) => props.theme.color.text[100]};
   }
 `
+
+export const UserStatsContainer = styled.div`
+display: grid;
+grid-template-columns: repeat(4, minmax(0px, 1fr));
+    grid-gap: 0.75rem;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    justify-content: space-between;
+    width: 100%;
+    padding-left: 24px;
+    padding-right: 24px;
+`
+
+export const UserStatsWrapper = styled.div`
+padding: 16px;
+background-color: ${(props) => props.theme.color.primary[100]};
+border-radius: 8px;
+position: relative;
+    flex: 1 1 0%;
+    padding-inline-start: 1rem;
+    padding-inline-end: 1rem;
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-radius: 8px;
+`
+
+export const UserStat = styled.div`
+margin: 0px;
+overflow-wrap: break-word;
+
+    p {
+      font-size: 1.87rem;
+      margin: 0px;
+    }
+    
+    h1 {
+      font-size: 1rem;
+      color: ${(props) => props.theme.color.text[200]};
+      margin: 0px;
+    }
+`
+
+export const ProtocolStatsContainer = styled.div`
+display: grid;
+grid-template-columns: 2.5fr .75fr .75fr;
+grid-gap: 0.75rem;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    justify-content: space-between;
+    width: 100%;
+    overflow-wrap: break-word;
+    padding: 24px;
+    `
+
+export const ProtocolStatsWrapper = styled.div`
+padding: 16px;
+border-radius: 8px;
+position: relative;
+    flex: 1 1 0%;
+    border-radius: 8px;
+    background-color: ${(props) => props.theme.color.primary[100]};
+    border: 1px solid ${(props) => props.theme.color.secondary[900]};
+`
+
+export const ProtocolStat = styled.div`
+margin: 0px;
+overflow-wrap: break-word;
+text-align: center;
+
+    p {
+      font-size: 1.87rem;
+      margin: 0px;
+    }
+    
+    h1 {
+      font-size: 1rem;
+      color: ${(props) => props.theme.color.text[200]};
+      margin: 0px;
+    }
+`
+
+export const ProductDescription = styled.div`
+margin: 0px;
+overflow-wrap: break-word;
+
+    p {
+      font-size: 1rem;
+      margin: 0px;
+    }
+    
+    h1 {
+      font-size: 1rem;
+      color: ${(props) => props.theme.color.text[200]};
+      margin: 0px;
+    }
+`
+
 
 export const MarketSummary = styled.div`
   display: flex;
@@ -200,6 +292,7 @@ export const OverviewContainer = styled.div`
 	display: flex;
 	justify-content: center;
 	width: 100%;
+  padding: 24px;
 `
 
 export const OverviewHeader = styled.div`
@@ -211,6 +304,8 @@ export const OverviewHeader = styled.div`
 	font-size: 0.875rem;
 	font-weight: ${(props) => props.theme.fontWeight.medium};
 	padding: 24px;
+  background-color: ${(props) => props.theme.color.primary[100]};
+  border-radius: 8px;
 `
 
 export const BorrowLimit = styled.div`
@@ -241,4 +336,114 @@ export const BorrowMeter = styled.div`
 	height: 100%;
 	border-radius: 8px;
 	background-color: ${(props) => props.theme.color.secondary[900]};
+`
+export const HeaderWrapper = styled.div`
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+	min-width: 6rem;
+
+	img {
+		vertical-align: middle;
+		height: 2rem;
+		width: 2rem;
+	}
+
+	p {
+		display: block;
+		margin-block-start: 1em;
+		margin-block-end: 1em;
+		margin: 0px;
+		margin-top: 0px;
+		margin-inline: 0.5rem 0px;
+		margin-bottom: 0px;
+		color: ${(props) => props.theme.color.text[100]};
+		font-size: 1.25rem;
+		font-weight: ${(props) => props.theme.fontWeight.medium};
+	}
+`
+
+export const ModalStack = styled.div`
+	display: flex;
+	flex-direction: column;
+	padding: 1rem;
+	width: 100%;
+`
+
+export const InputStack = styled.div`
+	display: flex;
+	-webkit-box-align: center;
+	align-items: center;
+	flex-direction: column;
+	margin-top: 1rem;
+	margin-inline: 0px;
+	margin-bottom: 0px;
+`
+
+export const LabelFlex = styled.div`
+	display: flex;
+	align-items: flex-end;
+	justify-content: flex-end;
+	width: 100%;
+`
+
+export const LabelStack = styled.div`
+	display: flex;
+	align-items: flex-end;
+	flex-direction: row;
+`
+
+export const MaxLabel = styled.p`
+	color: ${(props) => props.theme.color.text[200]};
+	font-size: 0.875rem;
+	font-weight: ${(props) => props.theme.fontWeight.medium};
+	margin-bottom: 0px;
+`
+
+export const AssetLabel = styled.p`
+	color: ${(props) => props.theme.color.text[100]};
+	font-size: 0.875rem;
+	font-weight: ${(props) => props.theme.fontWeight.medium};
+	margin-inline-start: 0.25rem;
+	margin-bottom: 0px;
+`
+
+export const AssetStack = styled.div`
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+	padding-left: 0.5rem;
+	padding-right: 1rem;
+
+	p {
+		margin-top: 0px;
+		margin-inline: 0.5rem 0px;
+		margin-bottom: 0px;
+		color: ${(props) => props.theme.color.text[100]};
+		text-align: center;
+		font-size: 1.125rem;
+		font-weight: ${(props) => props.theme.fontWeight.medium};
+	}
+`
+
+export const IconFlex = styled.div`
+	display: flex;
+	width: 1.25rem;
+
+	img {
+		display: block;
+		vertical-align: middle;
+		width: 1.25rem;
+		height: 1.25rem;
+	}
+`
+
+export const SectionHeader = styled.div`
+	color: ${(props) => props.theme.color.text[100]};
+	font-size: 1.25rem;
+	font-weight: ${(props) => props.theme.fontWeight.strong};
+	margin: 0;
+	text-align: center;
+	align-content: center;
+	padding-bottom: ${(props) => props.theme.spacing[2]}px;
 `
