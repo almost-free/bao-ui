@@ -1,5 +1,8 @@
 ![GitHub Super-Linter](https://github.com/baofinance/ui/workflows/Lint%20Code%20Base/badge.svg)
 
+# Notice
+We are currently working/testing under the ropsten branch.
+
 # Bao Finance UI
 This is the [app.bao.finance](https://app.bao.finance) UI project.
 
