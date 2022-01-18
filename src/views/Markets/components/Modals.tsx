@@ -32,7 +32,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 export enum MarketOperations {
 	supply = 'Supply',
 	withdraw = 'Withdraw',
-	borrow = 'Borrow',
+	borrow = 'Mint',
 	repay = 'Repay',
 }
 
@@ -121,7 +121,7 @@ const MarketModal = ({
 			case MarketOperations.withdraw:
 				return 'Withdrawable'
 			case MarketOperations.borrow:
-				return 'Borrowable'
+				return 'Mintable'
 			case MarketOperations.repay:
 				return 'Max Repay'
 		}

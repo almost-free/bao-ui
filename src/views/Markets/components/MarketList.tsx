@@ -76,9 +76,7 @@ export const MarketList: React.FC<MarketListProps> = ({
 							</small>
 							<hr />
 						</h3>
-						<MarketListHeader
-							headers={['Asset', 'APY', 'Wallet', 'Liquidity']}
-						/>
+						<MarketListHeader headers={['Asset', 'Wallet', 'Supplied']} />
 						{collateralMarkets.map((market: SupportedMarket) => (
 							<MarketListItemCollateral
 								market={market}
@@ -107,7 +105,7 @@ export const MarketList: React.FC<MarketListProps> = ({
 							</small>
 							<hr />
 						</h3>
-						<MarketListHeader headers={['Asset', 'APR', 'Liquidity']} />
+						<MarketListHeader headers={['Asset', 'APR', 'Debt']} />
 						{synthMarkets.map((market: SupportedMarket) => (
 							<MarketListItemSynth
 								market={market}
@@ -186,25 +184,18 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 						<Col>
 							<img src={market.icon} /> <b>{market.underlyingSymbol}</b>
 						</Col>
-						<Col>{market.supplyApy.toFixed(2)}%</Col>
 						<Col>
 							{accountBalances
 								.find((balance) => balance.address === market.underlying)
-								.balance.toFixed(4)}
+								.balance.toFixed(2)}
 						</Col>
 						<Col>
 							{`$${getDisplayBalance(
-								market.supplied *
+								suppliedUnderlying *
 									decimate(
 										prices[market.token],
 										36 - market.decimals,
-									).toNumber() -
-									market.totalBorrows *
-										decimate(
-											prices[market.token],
-											36 - market.decimals,
-										).toNumber(),
-								0,
+									).toNumber(),
 								0,
 							)}`}
 						</Col>
@@ -365,7 +356,7 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 						label="Borrow Details"
 						stats={[
 							{
-								label: 'Total Borrowed',
+								label: 'Total Debt',
 								value: `$${getDisplayBalance(
 									market.totalBorrows *
 										decimate(
@@ -376,7 +367,7 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 								)}`,
 							},
 							{
-								label: 'Your Borrow',
+								label: 'Your Debt',
 								value: `${borrowed.toFixed(4)} ${
 									market.underlyingSymbol
 								} | $${getDisplayBalance(
@@ -389,14 +380,14 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 								)}`,
 							},
 							{
-								label: 'Borrow Limit Remaining',
+								label: 'Debt Limit Remaining',
 								value: `$${getDisplayBalance(
 									accountLiquidity.usdBorrowable,
 									0,
 								)}`,
 							},
 							{
-								label: '% of Your Borrows',
+								label: '% of Your Debt',
 								value: `${Math.floor(
 									((borrowed *
 										decimate(
@@ -412,7 +403,7 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 					<MarketDetails asset={market} title="Market Details" />
 					<br />
 					<SubmitButton onClick={() => setShowBorrowModal(true)}>
-						Borrow / Repay
+						Mint / Repay
 					</SubmitButton>
 					<MarketBorrowModal
 						asset={market}
