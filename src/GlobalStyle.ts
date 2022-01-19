@@ -29,7 +29,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   b {
-    font-weight: ${(props) => props.theme.fontWeight.medium};
+    font-weight: ${(props: any) => props.theme.fontWeight.medium};
   }
 
   a {
@@ -43,8 +43,8 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .baoTicker {
-    color: #50251c;
-    background-color: #efeae7 !important;
+    color: ${(props: any) => props.theme.color.text[100]};
+    background-color: ${(props: any) => props.theme.color.primary[100]} !important;
     padding: 1rem;
     border-radius: 8px;
   }
@@ -85,7 +85,7 @@ const GlobalStyle = createGlobalStyle`
   .buttonActive {
     color: ${(props: any) => props.theme.color.text[300]};
     background-color: ${(props: any) => props.theme.color.primary[200]};
-    border: #625F65 1px solid;
+    border: 1px solid ${(props: any) => props.theme.color.primary[100]};
   }
 
   .buttonActive:hover {

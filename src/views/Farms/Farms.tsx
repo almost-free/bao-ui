@@ -32,7 +32,7 @@ const Farms: React.FC = () => {
 								subtitle="Earn BAO by staking SushiSwap LP and Basket Tokens!"
 							/>
 							<Container>
-								<StyledInfo>
+								{/* <StyledInfo>
 									❗️{' '}
 									<span
 										style={{
@@ -51,7 +51,7 @@ const Farms: React.FC = () => {
 									</ExternalLink>{' '}
 									before using the farms so you are familiar with protocol risks
 									and fees!
-								</StyledInfo>
+								</StyledInfo> */}
 								<Spacer size="md" />
 								<Balances />
 								<Spacer size="md" />

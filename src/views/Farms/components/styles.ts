@@ -116,7 +116,7 @@ export const Footnote = styled.div`
   padding: ${(props) => props.theme.spacing[2]}px
     ${(props) => props.theme.spacing[3]}px;
   color: ${(props) => props.theme.color.text[200]};
-  border-top: solid 1px ${(props) => props.theme.color.primary[600]};
+  border-top: solid 1px ${(props) => props.theme.color.primary[300]};
 `
 
 export const FootnoteValue = styled.div`
