@@ -173,7 +173,7 @@ const BorrowDetails = ({ asset }: MarketStatBlockProps) => {
 
 	return (
 		<StatBlock
-			label="Borrow Stats"
+			label="Debt Stats"
 			stats={[
 				{
 					label: 'Borrow APR',
@@ -212,7 +212,7 @@ const BorrowLimit = ({ asset, amount }: MarketStatBlockProps) => {
 
 	return (
 		<StatBlock
-			label="Borrow Limit Stats"
+			label="Debt Limit Stats"
 			stats={[
 				{
 					label: 'Borrow Limit',
