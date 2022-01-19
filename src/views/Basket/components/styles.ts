@@ -312,6 +312,10 @@ export const BasketExplanation = styled.div`
   width: 80%;
   margin: auto;
 
+  p {
+    margin-bottom: ${(props) => props.theme.spacing[4]}px;;
+  }
+
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
     width: 90%;
     padding: ${(props) => props.theme.spacing[4]}px;
