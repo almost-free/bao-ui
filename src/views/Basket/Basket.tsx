@@ -165,7 +165,7 @@ const Basket: React.FC = () => {
 				return (
 					<ItemWrapper style={{ justifyContent: 'start', textAlign: 'start', width: '10%' }}>
 						<img src={component.imageUrl} />
-						<p>{component.symbol}</p>
+						<p style={{ fontWeight: 500 }}>{component.symbol}</p>
 					</ItemWrapper>
 				)
 			},

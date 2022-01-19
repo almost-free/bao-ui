@@ -142,6 +142,7 @@ export const ItemWrapper = styled.div`
   align-items: center;
   flex-direction: row;
   min-width: 6rem;
+  font-size: ${(props) => props.theme.fontSize.md};
 
   img {
     vertical-align: middle;
@@ -387,7 +388,7 @@ export const HeaderWrapper = styled.div`
   align-items: center;
   flex-direction: row;
   min-width: 6rem;
-  font-size: ${(props) => props.theme.fontSize.large};
+  font-size: ${(props) => props.theme.fontSize.default};
 
   img {
     vertical-align: middle;
@@ -404,7 +405,7 @@ export const HeaderWrapper = styled.div`
     margin-inline: 0.5rem 0px;
     margin-bottom: 0px;
     color: ${(props) => props.theme.color.text[100]};
-    font-weight: ${(props) => props.theme.fontWeight.medium};
+    font-weight: ${(props) => props.theme.fontWeight.strong};
   }
 `
 
