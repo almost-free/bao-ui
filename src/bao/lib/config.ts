@@ -1,15 +1,15 @@
 import { Config } from './types'
 
 export default {
-  networkId: 3,
+  networkId: 137,
   defaultRpc: {
-    chainId: '0x3',
-    rpcUrls: ['https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'],
-    blockExplorerUrls: ['https://ropsten.etherscan.io'],
-    chainName: 'Ropsten Testnet',
+    chainId: '0x89',
+    rpcUrls: ['https://polygon-rpc.com/'],
+    blockExplorerUrls: ['https://polygonscan.com'],
+    chainName: 'Polygon',
     nativeCurrency: {
-      name: 'ETH',
-      symbol: 'ETH',
+      name: 'MATIC',
+      symbol: 'MATIC',
       decimals: 18,
     },
   },
@@ -18,69 +18,84 @@ export default {
     uniswapFactoryV2: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
     lendingLogicKashi: '0xcBA495A74e23D5B42853e41334e26DDd322Af082',
     bUSD: '0xDF559301C178221E8D76E4A91126C504Dfe5947a',
-    WETH: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
-    DEAD: '0x000000000000000000000000000000000000dead',
+    WETH: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+    SUSHI: '0x0b3f868e0be5597d5db7feb59e1cadbb0fdda50a',
+    GRT: '0x5fe2b58c013d7601147dcdd68c143a77499f5531',
+    wBTC: '0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6',
+    DAI: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063',
+    USDC: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+    USDT: '0xc2132d05d31c914a87c6611c10748aeb04b58e8f',
+    LINK: '0x53e0bca35ec356bd5dddfebbd1fc0fd03fabad39',
+    AAVE: '0xd6df932a45c0f255f85145f286ea0b292b21c90b',
+    SNX: '0x50b728d8d964fd00c2d0aad81718b71311fef68a',
+    CRV: '0x172370d5cd63279efa6d502dab29171933a610af',
+    MATIC: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
+    BAO: '0xc81278a52ad0e1485b7c3cdf79079220ddd68b7d',
+    POLLY: '0x4C392822D4bE8494B798cEA17B43d48B2308109C',
+    nDEFI: '0xd3f07EA86DDf7BAebEfd49731D7Bbd207FedC53B',
+    nSTBL: '0x9Bf320bd1796a7495BB6187f9EB4Db2679b74eD3',
+    RAI: '0x00e5646f60ac6fb446f621d146b6e1886f002905',
   },
   contracts: {
     polly: {
-      3: {
+      137: {
         address: '0x4C392822D4bE8494B798cEA17B43d48B2308109C',
         abi: 'polly.json',
       },
     },
     masterChef: {
-      3: {
+      137: {
         address: '0x850161bF73944a8359Bd995976a34Bb9fe30d398',
         abi: 'masterchef.json',
       },
     },
     weth: {
-      3: {
+      137: {
         address: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
         abi: 'weth.json',
       },
     },
     // Soft Synths
     recipe: {
-      3: {
+      137: {
         address: '0x0C9DF041582741b9Ae384F31209A6Dc7ea6B9Bcb',
         abi: 'recipe.json',
       },
     },
     wethPrice: {
-      3: {
+      137: {
         address: '0xF9680D99D6C9589e2a93a78A04A279e509205945',
         abi: 'chainoracle.json',
       },
     },
     basketRedeem: {
-      3: {
+      137: {
         address: '0x174c726ED2E30560935247C410294DB5FfEa39D4',
         abi: 'nestRedeem.json',
       },
     },
     // Hard Synths
     comptroller: {
-      3: {
+      137: {
         address: '0xbF2d7626a66aad910173fB43Ffd738A0F82C7f33',
         abi: 'comptroller.json',
       },
     },
     marketOracle: {
-      3: {
+      137: {
         address: '0x48E1654a7F4deB1cd3d9817D44cAebB7f1404f06',
         abi: 'marketOracle.json',
       },
     },
     stabilizer: {
-      3: {
+      137: {
         address: '0x89BA107c0a767A6eB317F6b1a715A45D05014eB6',
         abi: 'stabilizer.json',
       },
     },
   },
   subgraphs: {
-    3: {
+    137: {
       sushiExchange:
         'https://api.thegraph.com/subgraphs/name/sushiswap/matic-exchange',
       pollyBurn: 'https://api.thegraph.com/subgraphs/name/clabby/polly-burn',
@@ -95,10 +110,10 @@ export default {
       mid: 1,
       symbol: 'bUSD',
       marketAddresses: {
-        3: '0x63793577FC659243Df8fF731089FBe60d2A36A0d',
+        137: '0x63793577FC659243Df8fF731089FBe60d2A36A0d',
       },
       underlyingAddresses: {
-        3: '0x0F051F3C818b495ef27AC46462188295F83469A5',
+        137: '0x0F051F3C818b495ef27AC46462188295F83469A5',
       },
       isSynth: true,
       icon: '/PAI.png',
@@ -109,10 +124,10 @@ export default {
       mid: 2,
       symbol: 'bETH',
       marketAddresses: {
-        3: '0x895952c8290bf311B4848dE954F1A747Bf97809f',
+        137: '0x895952c8290bf311B4848dE954F1A747Bf97809f',
       },
       underlyingAddresses: {
-        3: 'ETH',
+        137: 'ETH',
       },
       icon: '/WETH.png',
       coingeckoId: 'weth',
@@ -122,10 +137,10 @@ export default {
       mid: 3,
       symbol: 'bUSDC',
       marketAddresses: {
-        3: '0xfA3545f9Cca55088B30223bc86BE1AEe0F86eE62',
+        137: '0xfA3545f9Cca55088B30223bc86BE1AEe0F86eE62',
       },
       underlyingAddresses: {
-        3: '0x48C1be647204eb97BC5C6914e5D60E7A7b7b398B',
+        137: '0x48C1be647204eb97BC5C6914e5D60E7A7b7b398B',
       },
       icon: '/USDC.png',
       coingeckoId: 'polygon',
@@ -136,7 +151,7 @@ export default {
     {
       nid: 1,
       basketAddresses: {
-        3: '0xd3f07EA86DDf7BAebEfd49731D7Bbd207FedC53B',
+        137: '0xd3f07EA86DDf7BAebEfd49731D7Bbd207FedC53B',
       },
       inputToken: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
       outputToken: '0xd3f07EA86DDf7BAebEfd49731D7Bbd207FedC53B',
@@ -167,7 +182,7 @@ export default {
     {
       nid: 2,
       basketAddresses: {
-        3: '0x9Bf320bd1796a7495BB6187f9EB4Db2679b74eD3',
+        137: '0x9Bf320bd1796a7495BB6187f9EB4Db2679b74eD3',
       },
       inputToken: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
       outputToken: '0x9Bf320bd1796a7495BB6187f9EB4Db2679b74eD3',
@@ -187,10 +202,10 @@ export default {
     {
       pid: 17,
       lpAddresses: {
-        3: '0xf27c14aedad4c1cfa7207f826c64ade3d5c741c3',
+        137: '0xf27c14aedad4c1cfa7207f826c64ade3d5c741c3',
       },
       tokenAddresses: {
-        3: '0x4C392822D4bE8494B798cEA17B43d48B2308109C',
+        137: '0x4C392822D4bE8494B798cEA17B43d48B2308109C',
       },
       tokenDecimals: 18,
       name: 'BAO-ETH',
@@ -205,10 +220,10 @@ export default {
     {
       pid: 18,
       lpAddresses: {
-        3: '0x095fc71521668d5bcc0fc3e3a9848e8911af21d9',
+        137: '0x095fc71521668d5bcc0fc3e3a9848e8911af21d9',
       },
       tokenAddresses: {
-        3: '0x4C392822D4bE8494B798cEA17B43d48B2308109C',
+        137: '0x4C392822D4bE8494B798cEA17B43d48B2308109C',
       },
       tokenDecimals: 18,
       name: 'BAO-nDEFI',
@@ -223,10 +238,10 @@ export default {
     {
       pid: 19,
       lpAddresses: {
-        3: '0xf70b37a372befe8c274a84375c233a787d0d4dfa',
+        137: '0xf70b37a372befe8c274a84375c233a787d0d4dfa',
       },
       tokenAddresses: {
-        3: '0x4C392822D4bE8494B798cEA17B43d48B2308109C',
+        137: '0x4C392822D4bE8494B798cEA17B43d48B2308109C',
       },
       tokenDecimals: 18,
       name: 'BAO-RAI',
@@ -241,10 +256,10 @@ export default {
     {
       pid: 14,
       lpAddresses: {
-        3: '0xd3f07EA86DDf7BAebEfd49731D7Bbd207FedC53B',
+        137: '0xd3f07EA86DDf7BAebEfd49731D7Bbd207FedC53B',
       },
       tokenAddresses: {
-        3: '0xd3f07EA86DDf7BAebEfd49731D7Bbd207FedC53B',
+        137: '0xd3f07EA86DDf7BAebEfd49731D7Bbd207FedC53B',
       },
       tokenDecimals: 18,
       name: 'nDEFI',
@@ -258,10 +273,10 @@ export default {
     {
       pid: 15,
       lpAddresses: {
-        3: '0xd0fa2eaa5d854f184394e93f7b75624084600685',
+        137: '0xd0fa2eaa5d854f184394e93f7b75624084600685',
       },
       tokenAddresses: {
-        3: '0xd3f07EA86DDf7BAebEfd49731D7Bbd207FedC53B',
+        137: '0xd3f07EA86DDf7BAebEfd49731D7Bbd207FedC53B',
       },
       tokenDecimals: 18,
       name: 'nDEFI-RAI',
@@ -276,10 +291,10 @@ export default {
     {
       pid: 16,
       lpAddresses: {
-        3: '0x1534d7c91bd77eb447acb7fb92ea042b918f58bb',
+        137: '0x1534d7c91bd77eb447acb7fb92ea042b918f58bb',
       },
       tokenAddresses: {
-        3: '0xd3f07EA86DDf7BAebEfd49731D7Bbd207FedC53B',
+        137: '0xd3f07EA86DDf7BAebEfd49731D7Bbd207FedC53B',
       },
       tokenDecimals: 18,
       name: 'nDEFI-ETH',
@@ -294,10 +309,10 @@ export default {
     {
       pid: 23,
       lpAddresses: {
-        3: '0x9Bf320bd1796a7495BB6187f9EB4Db2679b74eD3',
+        137: '0x9Bf320bd1796a7495BB6187f9EB4Db2679b74eD3',
       },
       tokenAddresses: {
-        3: '0x9Bf320bd1796a7495BB6187f9EB4Db2679b74eD3',
+        137: '0x9Bf320bd1796a7495BB6187f9EB4Db2679b74eD3',
       },
       tokenDecimals: 18,
       name: 'nSTBL',
@@ -311,10 +326,10 @@ export default {
     {
       pid: 24,
       lpAddresses: {
-        3: '0x0c98d36908dfbe11C9A4d1F3CD8A9b94bAbA7521',
+        137: '0x0c98d36908dfbe11C9A4d1F3CD8A9b94bAbA7521',
       },
       tokenAddresses: {
-        3: '0x9Bf320bd1796a7495BB6187f9EB4Db2679b74eD3',
+        137: '0x9Bf320bd1796a7495BB6187f9EB4Db2679b74eD3',
       },
       tokenDecimals: 18,
       name: 'nSTBL-ETH',
@@ -330,10 +345,10 @@ export default {
     {
       pid: 22,
       lpAddresses: {
-        3: '0x67cf45e239793a72f4bd4d46303735aeedf5d2b4',
+        137: '0x67cf45e239793a72f4bd4d46303735aeedf5d2b4',
       },
       tokenAddresses: {
-        3: '0x00e5646f60ac6fb446f621d146b6e1886f002905',
+        137: '0x00e5646f60ac6fb446f621d146b6e1886f002905',
       },
       tokenDecimals: 18,
       name: 'RAI-ETH',
@@ -348,10 +363,10 @@ export default {
     {
       pid: 0,
       lpAddresses: {
-        3: '0xdfa3ddd1807db8e4b4851d2e5421374e433a2983',
+        137: '0xdfa3ddd1807db8e4b4851d2e5421374e433a2983',
       },
       tokenAddresses: {
-        3: '0xda537104d6a5edd53c6fbba9a898708e465260b6',
+        137: '0xda537104d6a5edd53c6fbba9a898708e465260b6',
       },
       tokenDecimals: 18,
       name: 'YFI-ETH',
@@ -366,10 +381,10 @@ export default {
     {
       pid: 1,
       lpAddresses: {
-        3: '0xce5b8977f5021f1ef1232b1d4a0cfd03e8bcba9b',
+        137: '0xce5b8977f5021f1ef1232b1d4a0cfd03e8bcba9b',
       },
       tokenAddresses: {
-        3: '0x4257EA7637c355F81616050CbB6a9b709fd72683',
+        137: '0x4257EA7637c355F81616050CbB6a9b709fd72683',
       },
       tokenDecimals: 18,
       name: 'CVX-ETH',
@@ -384,10 +399,10 @@ export default {
     {
       pid: 2,
       lpAddresses: {
-        3: '0x5e5c517ec55d6393d91d6a1379e5ae393a01a423',
+        137: '0x5e5c517ec55d6393d91d6a1379e5ae393a01a423',
       },
       tokenAddresses: {
-        3: '0x3AE490db48d74B1bC626400135d4616377D0109f',
+        137: '0x3AE490db48d74B1bC626400135d4616377D0109f',
       },
       tokenDecimals: 18,
       name: 'ALPHA-ETH',
@@ -402,10 +417,10 @@ export default {
     {
       pid: 3,
       lpAddresses: {
-        3: '0xc56060af39152c614fa67e169c0dd1809a886e4f',
+        137: '0xc56060af39152c614fa67e169c0dd1809a886e4f',
       },
       tokenAddresses: {
-        3: '0xb33eaad8d922b1083446dc23f610c2567fb5180f',
+        137: '0xb33eaad8d922b1083446dc23f610c2567fb5180f',
       },
       tokenDecimals: 18,
       name: 'UNI-ETH',
@@ -420,10 +435,10 @@ export default {
     {
       pid: 4,
       lpAddresses: {
-        3: '0xb5846453b67d0b4b4ce655930cf6e4129f4416d7',
+        137: '0xb5846453b67d0b4b4ce655930cf6e4129f4416d7',
       },
       tokenAddresses: {
-        3: '0x0b3f868e0be5597d5db7feb59e1cadbb0fdda50a',
+        137: '0x0b3f868e0be5597d5db7feb59e1cadbb0fdda50a',
       },
       tokenDecimals: 18,
       name: 'SUSHI-ETH',
@@ -438,10 +453,10 @@ export default {
     {
       pid: 5,
       lpAddresses: {
-        3: '0x396e655c309676caf0acf4607a868e0cded876db',
+        137: '0x396e655c309676caf0acf4607a868e0cded876db',
       },
       tokenAddresses: {
-        3: '0x172370d5cd63279efa6d502dab29171933a610af',
+        137: '0x172370d5cd63279efa6d502dab29171933a610af',
       },
       tokenDecimals: 18,
       name: 'CRV-ETH',
@@ -456,10 +471,10 @@ export default {
     {
       pid: 6,
       lpAddresses: {
-        3: '0xc67136e235785727a0d3b5cfd08325327b81d373',
+        137: '0xc67136e235785727a0d3b5cfd08325327b81d373',
       },
       tokenAddresses: {
-        3: '0x9a71012b13ca4d3d0cdc72a177df3ef03b0e76a3',
+        137: '0x9a71012b13ca4d3d0cdc72a177df3ef03b0e76a3',
       },
       tokenDecimals: 18,
       name: 'BAL-ETH',
@@ -474,10 +489,10 @@ export default {
     {
       pid: 7,
       lpAddresses: {
-        3: '0x9021a31062a1d9c9c35d632ed54a9d923e46809f',
+        137: '0x9021a31062a1d9c9c35d632ed54a9d923e46809f',
       },
       tokenAddresses: {
-        3: '0x8505b9d2254a7ae468c0e9dd10ccea3a837aef5c',
+        137: '0x8505b9d2254a7ae468c0e9dd10ccea3a837aef5c',
       },
       tokenDecimals: 18,
       name: 'COMP-ETH',
@@ -492,10 +507,10 @@ export default {
     {
       pid: 8,
       lpAddresses: {
-        3: '0xbf61e1d82bd440cb9da11d325c046f029a663890',
+        137: '0xbf61e1d82bd440cb9da11d325c046f029a663890',
       },
       tokenAddresses: {
-        3: '0x6f7C932e7684666C9fd1d44527765433e01fF61d',
+        137: '0x6f7C932e7684666C9fd1d44527765433e01fF61d',
       },
       tokenDecimals: 18,
       name: 'MKR-ETH',
@@ -510,10 +525,10 @@ export default {
     {
       pid: 9,
       lpAddresses: {
-        3: '0x14dbe3e6814fd532ef87e4be9b4192c018752823',
+        137: '0x14dbe3e6814fd532ef87e4be9b4192c018752823',
       },
       tokenAddresses: {
-        3: '0x95c300e7740D2A88a44124B424bFC1cB2F9c3b89',
+        137: '0x95c300e7740D2A88a44124B424bFC1cB2F9c3b89',
       },
       tokenDecimals: 18,
       name: 'ALCX-ETH',
@@ -528,10 +543,10 @@ export default {
     {
       pid: 10,
       lpAddresses: {
-        3: '0x74d23f21f780ca26b47db16b0504f2e3832b9321',
+        137: '0x74d23f21f780ca26b47db16b0504f2e3832b9321',
       },
       tokenAddresses: {
-        3: '0x53e0bca35ec356bd5dddfebbd1fc0fd03fabad39',
+        137: '0x53e0bca35ec356bd5dddfebbd1fc0fd03fabad39',
       },
       tokenDecimals: 18,
       name: 'LINK-ETH',
@@ -546,10 +561,10 @@ export default {
     {
       pid: 11,
       lpAddresses: {
-        3: '0x116ff0d1caa91a6b94276b3471f33dbeb52073e7',
+        137: '0x116ff0d1caa91a6b94276b3471f33dbeb52073e7',
       },
       tokenAddresses: {
-        3: '0x50b728d8d964fd00c2d0aad81718b71311fef68a',
+        137: '0x50b728d8d964fd00c2d0aad81718b71311fef68a',
       },
       tokenDecimals: 18,
       name: `SNX-ETH`,
@@ -564,10 +579,10 @@ export default {
     {
       pid: 12,
       lpAddresses: {
-        3: '0x6be10c5c7178af8c49997d07d6a5444c15e58170',
+        137: '0x6be10c5c7178af8c49997d07d6a5444c15e58170',
       },
       tokenAddresses: {
-        3: '0x3066818837c5e6ed6601bd5a91b0762877a6b731',
+        137: '0x3066818837c5e6ed6601bd5a91b0762877a6b731',
       },
       tokenDecimals: 18,
       name: `UMA-ETH`,
@@ -582,10 +597,10 @@ export default {
     {
       pid: 13,
       lpAddresses: {
-        3: '0x2481cbe674fb72cf8cd3031ff4747078d168c9b3',
+        137: '0x2481cbe674fb72cf8cd3031ff4747078d168c9b3',
       },
       tokenAddresses: {
-        3: '0xc81278a52AD0e1485B7C3cDF79079220Ddd68b7D',
+        137: '0xc81278a52AD0e1485B7C3cDF79079220Ddd68b7D',
       },
       tokenDecimals: 18,
       name: `BAO-ETH`,
