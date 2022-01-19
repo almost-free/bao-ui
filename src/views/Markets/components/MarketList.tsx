@@ -105,7 +105,7 @@ export const MarketList: React.FC<MarketListProps> = ({
 							</small>
 							<hr />
 						</h3>
-						<MarketListHeader headers={['Asset', 'APR', 'Debt']} />
+						<MarketListHeader headers={['Asset', 'APR', 'Wallet', 'Debt']} />
 						{synthMarkets.map((market: SupportedMarket) => (
 							<MarketListItemSynth
 								market={market}
@@ -316,12 +316,23 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 	prices,
 }: MarketListItemProps) => {
 	const [showBorrowModal, setShowBorrowModal] = useState(false)
+	const balances = useAccountBalances()
 
 	const borrowed = useMemo(
 		() =>
 			borrowBalances.find((balance) => balance.address === market.token)
 				.balance,
 		[borrowBalances, exchangeRates],
+	)
+
+	const walletBalance = useMemo(
+		() =>
+			balances &&
+			balances.find((_balance) => _balance.address === market.underlying)
+				? balances.find((_balance) => _balance.address === market.underlying)
+						.balance
+				: 0,
+		[balances],
 	)
 
 	return (
@@ -333,19 +344,14 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 							<img src={market.icon} /> <b>{market.underlyingSymbol}</b>
 						</Col>
 						<Col>{market.borrowApy.toFixed(2)}%</Col>
+						<Col>{walletBalance.toFixed(2)}</Col>
 						<Col>
 							{`$${getDisplayBalance(
-								market.supplied *
+								borrowed *
 									decimate(
 										prices[market.token],
 										36 - market.decimals,
-									).toNumber() -
-									market.totalBorrows *
-										decimate(
-											prices[market.token],
-											36 - market.decimals,
-										).toNumber(),
-								0,
+									).toNumber(),
 								0,
 							)}`}
 						</Col>
@@ -353,7 +359,7 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 				</StyledAccordionHeader>
 				<StyledAccordionBody>
 					<StatBlock
-						label="Borrow Details"
+						label="Debt Details"
 						stats={[
 							{
 								label: 'Total Debt',
