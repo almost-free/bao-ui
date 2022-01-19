@@ -50,7 +50,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .outline-primary {
-    border: none !important;
+    border: #625F65 1px solid !important;
   }
 
   .tooltip {
@@ -85,6 +85,7 @@ const GlobalStyle = createGlobalStyle`
   .buttonActive {
     color: ${(props: any) => props.theme.color.text[300]};
     background-color: ${(props: any) => props.theme.color.primary[200]};
+    border: #625F65 1px solid;
   }
 
   .buttonActive:hover {
@@ -95,6 +96,7 @@ const GlobalStyle = createGlobalStyle`
   .buttonInactive {
     color: ${(props: any) => props.theme.color.text[100]};
     background-color: ${(props: any) => props.theme.color.primary[300]};
+    border: 1px solid ${(props: any) => props.theme.color.primary[300]};
   }
 
   .modal-content {
@@ -110,6 +112,36 @@ const GlobalStyle = createGlobalStyle`
 
   .modal-footer {
     border-top: 1px solid ${(props: any) => props.theme.color.primary[200]};;
+  }
+
+  .btn {
+    border: 1px solid ${(props: any) => props.theme.color.primary[300]} !important;
+    outline: none !important;
+  }
+
+  a.active.focus,
+  a.active:focus,
+  a.focus,
+  a:active.focus,
+  a:active:focus,
+  a:focus,
+  button.active.focus,
+  button.active:focus,
+  button.focus,
+  button:active.focus,
+  button:active:focus,
+  button:focus,
+  .btn.active.focus,
+  .btn.active:focus,
+  .btn.focus,
+  .btn:active.focus,
+  .btn:active:focus,
+  .btn:focus {
+    outline: 0;
+    outline-color: transparent;
+    outline-width: 0;
+    outline-style: none;
+    box-shadow: 0 0 0 0 rgba(0,123,255,0);
   }
 
   .btn-close {

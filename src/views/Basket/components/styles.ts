@@ -189,8 +189,8 @@ export const PrefButtons = styled.div`
     background: ${(props) => props.theme.color.primary[100]};
     border-radius: ${(props) => props.theme.borderRadius}px;
     font-weight: ${(props) => props.theme.fontWeight.strong};
-    border: #625F65 1px solid;
-    
+    border: ${(props) => props.theme.color.primary[300]} 1px solid;
+
     &:hover {
       color: ${(props) => props.theme.color.text[300]};
       background: ${(props) => props.theme.color.primary[100]};

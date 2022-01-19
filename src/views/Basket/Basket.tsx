@@ -360,7 +360,7 @@ const Basket: React.FC = () => {
 											onClick={() => setPriceHistoryTimeFrame(timeFrame)}
 											active={priceHistoryTimeFrame === timeFrame}
 											key={timeFrame}
-											style={{ marginTop: '0px', border: 'none' }}
+											style={{ marginTop: '0px' }}
 										>
 											{timeFrame}
 										</BootButton>
