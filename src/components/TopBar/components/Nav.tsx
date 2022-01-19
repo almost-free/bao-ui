@@ -5,18 +5,14 @@ import styled from 'styled-components'
 const Nav: React.FC = () => {
 	return (
 		<StyledNav>
-			{/* <StyledLink
-				exact
-				activeClassName="active"
-				to={{ pathname: '/', search: '?ref=' + refer }}
-			>
-				Home
-			</StyledLink> */}
 			<StyledLink
 				exact
 				activeClassName="active"
 				to={{ pathname: '/' }}
 			>
+				Home
+			</StyledLink>
+			<StyledLink exact activeClassName="active" to={{ pathname: '/baskets' }}>
 				Baskets
 			</StyledLink>
 			{/* <StyledLink
@@ -33,11 +29,7 @@ const Nav: React.FC = () => {
 			>
 				Ballast
 			</StyledLink> */}
-			<StyledLink
-				exact
-				activeClassName="active"
-				to={{ pathname: '/farms' }}
-			>
+			<StyledLink exact activeClassName="active" to={{ pathname: '/farms' }}>
 				Farms
 			</StyledLink>
 			<StyledAbsoluteLink
@@ -49,10 +41,7 @@ const Nav: React.FC = () => {
 			<StyledAbsoluteLink href="https://gov.bao.finance" target="_blank">
 				Forum
 			</StyledAbsoluteLink>
-			<StyledAbsoluteLink
-				href="https://docs.bao.finance"
-				target="_blank"
-			>
+			<StyledAbsoluteLink href="https://docs.bao.finance" target="_blank">
 				Docs
 			</StyledAbsoluteLink>
 		</StyledNav>

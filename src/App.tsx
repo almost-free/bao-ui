@@ -19,6 +19,7 @@ import TransactionProvider from './contexts/Transactions'
 import theme from './theme'
 import Markets from './views/Markets'
 import Ballast from './views/Markets/Ballast'
+import Home from './views/Home'
 import Baskets from './views/Baskets'
 import Farms from './views/Farms'
 import { SWRConfig } from 'swr'
@@ -70,13 +71,16 @@ const App: React.FC = () => {
 				/>
 				<MobileMenu onDismiss={handleDismissMobileMenu} visible={mobileMenu} />
 				<Switch>
+					<Route path="/" exact>
+						<Home />
+					</Route>
 					{/* <Route path="/" exact>
 						<Markets />
 					</Route>
 					<Route path="/ballast">
 						<Ballast />
 					</Route> */}
-					<Route path="/" exact>
+					<Route path="/baskets">
 						<Baskets />
 					</Route>
 					<Route path="/Farms">
@@ -99,27 +103,26 @@ const Providers: React.FC<ProvidersProps> = ({
 				chainId={137}
 				connectors={{
 					walletconnect: {
-						rpcUrl:
-							'https://polygon-rpc.com/',
+						rpcUrl: 'https://polygon-rpc.com/',
 					},
 				}}
 			>
 				<BaoProvider>
 					<BasketsProvider>
-					{/* <MarketsProvider> */}
+						{/* <MarketsProvider> */}
 						<TransactionProvider>
 							<FarmsProvider>
-							<SWRConfig
-								value={{
-									fetcher,
-									refreshInterval: 300000,
-								}}
-							>
-								<ModalsProvider>{children}</ModalsProvider>
-							</SWRConfig>
+								<SWRConfig
+									value={{
+										fetcher,
+										refreshInterval: 300000,
+									}}
+								>
+									<ModalsProvider>{children}</ModalsProvider>
+								</SWRConfig>
 							</FarmsProvider>
 						</TransactionProvider>
-					{/* </MarketsProvider> */}
+						{/* </MarketsProvider> */}
 					</BasketsProvider>
 				</BaoProvider>
 			</UseWalletProvider>
