@@ -85,7 +85,6 @@ const GlobalStyle = createGlobalStyle`
   .buttonActive {
     color: ${(props: any) => props.theme.color.text[300]};
     background-color: ${(props: any) => props.theme.color.primary[200]};
-    border: none;
   }
 
   .buttonActive:hover {
@@ -96,7 +95,6 @@ const GlobalStyle = createGlobalStyle`
   .buttonInactive {
     color: ${(props: any) => props.theme.color.text[100]};
     background-color: ${(props: any) => props.theme.color.primary[300]};
-    border: none;
   }
 
   .modal-content {
@@ -112,16 +110,6 @@ const GlobalStyle = createGlobalStyle`
 
   .modal-footer {
     border-top: 1px solid ${(props: any) => props.theme.color.primary[200]};;
-  }
-
-  .btn {
-    border: none !important;
-    outline: none !important;
-  }
-
-  .btn:active {
-    border: none !important;
-    outline: none !important;
   }
 
   .btn-close {

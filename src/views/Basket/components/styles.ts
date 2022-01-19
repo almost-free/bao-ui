@@ -39,6 +39,7 @@ export const BasketBoxHeader = styled.div`
   color: ${(props) => props.theme.color.text[100]};
   margin: auto;
   font-size: 2rem;
+  margin-bottom: ${(props) => props.theme.spacing[1]}px;
 
   p {
     margin: 0;
@@ -184,26 +185,22 @@ export const PrefButtons = styled.div`
     margin-left: ${(props) => props.theme.spacing[2]}px;
     margin-top: ${(props) => props.theme.spacing[4]}px;
     color: ${(props) => props.theme.color.text[100]};
-    border-radius: ${(props) => props.theme.borderRadius}px;
     width: 48px;
     background: ${(props) => props.theme.color.primary[100]};
-    border: ${(props) => props.theme.border.default};
-    box-shadow: ${(props) => props.theme.boxShadow.default};
+    border-radius: ${(props) => props.theme.borderRadius}px;
     font-weight: ${(props) => props.theme.fontWeight.strong};
-
+    border: #625F65 1px solid;
+    
     &:hover {
-      color: ${(props) => props.theme.color.text[400]};
+      color: ${(props) => props.theme.color.text[300]};
       background: ${(props) => props.theme.color.primary[100]};
-      box-shadow: ${(props) => props.theme.boxShadow.hover};
     }
 
     &.active,
     &:active,
     &:focus {
-      color: ${(props) => props.theme.color.text[400]};
-      background: ${(props) => props.theme.color.primary[100]};
-      box-shadow: ${(props) => props.theme.boxShadow.hover};
-    }
+      background-color: ${(props) => props.theme.color.primary[200]};
+      color: ${(props) => props.theme.color.text[100]};
   }
 
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}px) {
