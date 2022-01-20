@@ -14,25 +14,29 @@ import Balances from './components/Balances'
 import FarmCards from './components/FarmCards'
 import { StyledInfo } from './components/styles'
 import ExternalLink from 'components/ExternalLink'
+import useFarms from 'hooks/useFarms'
+import { SpinnerLoader } from 'components/Loader'
+import { FarmList } from './components/FarmList'
 
 const Farms: React.FC = () => {
 	const { path } = useRouteMatch()
 	const { account, ethereum }: any = useWallet()
 	const [onPresentWalletProviderModal] = useModal(<WalletProviderModal />)
 
+	const farms = useFarms()
+
 	return (
 		<Switch>
 			<Page>
 				{account && ethereum.chainId === Config.defaultRpc.chainId ? (
 					<>
-						<Route exact path={path}>
-							<PageHeader
-								icon=''
-								title="Farms"
-								subtitle="Earn BAO by staking SushiSwap LP and Basket Tokens!"
-							/>
-							<Container>
-								{/* <StyledInfo>
+						<PageHeader
+							icon=""
+							title="Farms"
+							subtitle="Earn BAO by staking SushiSwap LP and Basket Tokens!"
+						/>
+						<Container>
+							{/* <StyledInfo>
 									❗️{' '}
 									<span
 										style={{
@@ -52,15 +56,11 @@ const Farms: React.FC = () => {
 									before using the farms so you are familiar with protocol risks
 									and fees!
 								</StyledInfo> */}
-								<Spacer size="md" />
-								<Balances />
-								<Spacer size="md" />
-							</Container>
-							<FarmCards />
-						</Route>
-						<Route path={`${path}/:farmId`}>
-							<Farm />
-						</Route>
+							<Spacer size="md" />
+							<Balances />
+							<Spacer size="md" />
+							<FarmList />
+						</Container>
 					</>
 				) : (
 					<div
