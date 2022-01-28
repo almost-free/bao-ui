@@ -106,10 +106,6 @@ const SupplyDetails = ({ asset }: MarketStatBlockProps) => {
 			label="Supply Stats"
 			stats={[
 				{
-					label: 'Supply APY',
-					value: `${asset.supplyApy.toFixed(2)}%`,
-				},
-				{
 					label: 'Supply Balance',
 					value: `${supplyBalance.toFixed(4)} ${asset.underlyingSymbol} | $${
 						supplyBalanceUsd || '~'

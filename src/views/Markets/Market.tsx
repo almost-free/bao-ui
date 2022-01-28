@@ -141,12 +141,12 @@ const Market = () => {
 					}
 				/>
 				<InfoCol
-					title="APY"
-					content={`${activeMarket.supplyApy.toFixed(2)}%`}
+					title="Number of Suppliers"
+					content={marketInfo && marketInfo.numberOfSuppliers}
 				/>
 				<InfoCol
-					title="APR"
-					content={`${activeMarket.borrowApy.toFixed(2)}%`}
+					title="Number of Borrowers"
+					content={marketInfo && marketInfo.numberOfBorrowers}
 				/>
 			</Row>
 			<br />
@@ -202,12 +202,12 @@ const Market = () => {
 					}
 				/>
 				<InfoCol
-					title="Number of Suppliers"
-					content={marketInfo && marketInfo.numberOfSuppliers}
+					title="APY"
+					content={`${activeMarket.supplyApy > 0.00 ? activeMarket.supplyApy.toFixed(2) : '-' }${activeMarket.supplyApy >= 0.00 ? '' : '%'} `}
 				/>
 				<InfoCol
-					title="Number of Borrowers"
-					content={marketInfo && marketInfo.numberOfBorrowers}
+					title="APR"
+					content={`${activeMarket.borrowApy.toFixed(2)}%`}
 				/>
 			</Row>
 			<br />
