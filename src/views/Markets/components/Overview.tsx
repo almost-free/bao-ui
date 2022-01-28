@@ -46,21 +46,25 @@ export const Overview = () => {
 				<UserStatsWrapper>
 					<StatWrapper>
 						<UserStat>
-							<h1>Net APY</h1>
-							<p>
-								{`${accountLiquidity ? accountLiquidity.netApy.toFixed(2) : 0}`}
-								%
-							</p>
-						</UserStat>
-					</StatWrapper>
-					<StatWrapper>
-						<UserStat>
 							<h1>Your Collateral</h1>
 							<p>
 								$
 								{`${
 									accountLiquidity
 										? getDisplayBalance(accountLiquidity.usdSupply, 0, 2)
+										: 0
+								}`}
+							</p>
+						</UserStat>
+					</StatWrapper>
+					<StatWrapper>
+						<UserStat>
+							<h1>Total Debt</h1>
+							<p>
+								$
+								{`${
+									accountLiquidity
+										? getDisplayBalance(accountLiquidity.usdBorrow, 0, 2)
 										: 0
 								}`}
 							</p>
@@ -111,14 +115,10 @@ export const Overview = () => {
 					</div>
 					<StatWrapper>
 						<UserStat>
-							<h1>Total Debt</h1>
+							<h1>Net APR</h1>
 							<p>
-								$
-								{`${
-									accountLiquidity
-										? getDisplayBalance(accountLiquidity.usdBorrow, 0, 2)
-										: 0
-								}`}
+								{`${accountLiquidity ? accountLiquidity.netApy.toFixed(2) : 0}`}
+								%
 							</p>
 						</UserStat>
 					</StatWrapper>
