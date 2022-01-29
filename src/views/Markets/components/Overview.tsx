@@ -117,7 +117,7 @@ export const Overview = () => {
 						<UserStat>
 							<h1>Net APR</h1>
 							<p>
-								{`${accountLiquidity ? accountLiquidity.netApy.toFixed(2) : 0}`}
+								{`${accountLiquidity ? accountLiquidity.borrowApy.toFixed(2) : 0}`}
 								%
 							</p>
 						</UserStat>
