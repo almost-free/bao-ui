@@ -189,7 +189,7 @@ const MarketListItemCollateral: React.FC<MarketListItemProps> = ({
 						<Col>
 							{accountBalances
 								.find((balance) => balance.address === market.underlying)
-								.balance.toFixed(4)}
+								.balance.toFixed(2)}
 						</Col>
 						<Col>
 							{`$${getDisplayBalance(
@@ -365,7 +365,7 @@ const MarketListItemSynth: React.FC<MarketListItemProps> = ({
 						<Col>
 							{accountBalances
 								.find((balance) => balance.address === market.underlying)
-								.balance.toFixed(4)}
+								.balance.toFixed(2)}
 						</Col>
 					</Row>
 				</StyledAccordionHeader>
