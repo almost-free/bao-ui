@@ -8,7 +8,7 @@ import useTransactionProvider from './useTransactionProvider'
 
 const useTokenBalance = (tokenAddress: string) => {
   const [balance, setBalance] = useState(new BigNumber(0))
-  const { account, ethereum }: { account: string; ethereum: provider } =
+  const { account, ethereum }: { account: string; ethereum?: provider } =
     useWallet()
   const bao = useBao()
   const { transactions } = useTransactionProvider()

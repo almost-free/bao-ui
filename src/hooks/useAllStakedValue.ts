@@ -22,7 +22,7 @@ export interface StakedValue {
 
 const useAllStakedValue = (): StakedValue[] => {
   const [balances, setBalance] = useState([] as Array<StakedValue>)
-  const { account, ethereum } = useWallet<provider>()
+  const { account, ethereum }: { account: string; ethereum?: provider } = useWallet()
   const bao = useBao()
   const farms = getFarms(bao)
   const masterChefContract = getMasterChefContract(bao)

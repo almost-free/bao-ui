@@ -8,8 +8,7 @@ import useBlock from './useBlock'
 
 const useEarnings = (pid: number) => {
   const [balance, setBalance] = useState(new BigNumber(0))
-  const { account, ethereum }: { account: string; ethereum: provider } =
-    useWallet()
+  const { account } = useWallet()
   const bao = useBao()
   const masterChefContract = getMasterChefContract(bao)
   const block = useBlock()

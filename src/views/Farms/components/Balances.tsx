@@ -84,7 +84,7 @@ const Balances: React.FC = () => {
 		bao && bao.getContract('polly').options.address,
 	)
 	const masterChefContract = getMasterChefContract(bao)
-	const { account, ethereum }: { account: any; ethereum: any } = useWallet()
+	const { account } = useWallet()
 
 	useEffect(() => {
 		async function fetchTotalSupply() {

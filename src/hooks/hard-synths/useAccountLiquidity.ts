@@ -12,7 +12,6 @@ import Config from '../../bao/lib/config'
 import BigNumber from 'bignumber.js'
 
 export type AccountLiquidity = {
-  borrowApy: number
   netApy: number
   usdSupply: number
   usdBorrow: number
@@ -98,7 +97,6 @@ export const useAccountLiquidity = (): AccountLiquidity => {
         : 0
 
     setAccountLiquidity({
-      borrowApy,
       netApy,
       usdSupply,
       usdBorrow,

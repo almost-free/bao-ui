@@ -1,14 +1,13 @@
 import BigNumber from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
 import { useWallet } from 'use-wallet'
-import { provider } from 'web3-core'
 import { getEarned, getFarms, getMasterChefContract } from '../bao/utils'
 import useBao from './useBao'
 import useBlock from './useBlock'
 
 const useAllEarnings = () => {
   const [balances, setBalance] = useState([] as Array<BigNumber>)
-  const { account }: { account: string; ethereum: provider } = useWallet()
+  const { account } = useWallet()
   const bao = useBao()
   const farms = getFarms(bao)
   const masterChefContract = getMasterChefContract(bao)

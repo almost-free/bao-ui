@@ -6,7 +6,7 @@ import { provider } from 'web3-core'
 
 const useBlock = () => {
   const [block, setBlock] = useState(0)
-  const { ethereum }: { ethereum: provider } = useWallet()
+  const { ethereum }: { ethereum?: provider } = useWallet()
 
   useEffect(() => {
     // const setBlockDebounced = debounce(setBlock, 300)

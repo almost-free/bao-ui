@@ -3,7 +3,6 @@ import { useWallet } from 'use-wallet'
 import useBao from '../../../hooks/useBao'
 import useTransactionProvider from '../../../hooks/useTransactionProvider'
 import Config from '../../../bao/lib/config'
-import { provider } from 'web3-core'
 import { SupportedMarket } from '../../../bao/lib/types'
 import { decimate } from '../../../utils/numberFormat'
 import { Contract } from 'web3-eth-contract'
@@ -18,7 +17,7 @@ const toApy = (rate: number) =>
   (Math.pow((rate / 1e18) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR) - 1) * 100
 
 export const useMarketsContext = (): SupportedMarket[] | undefined => {
-  const { account }: { account: string; ethereum: provider } = useWallet()
+  const { account } = useWallet()
   const bao = useBao()
   const { transactions } = useTransactionProvider()
   const [markets, setMarkets] = useState<SupportedMarket[] | undefined>()

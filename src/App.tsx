@@ -15,6 +15,7 @@ import { SWRConfig } from 'swr'
 import fetcher from 'bao/lib/fetcher'
 import theme from './theme'
 import GlobalStyle from 'GlobalStyle'
+import { connectors, connectorsByName } from 'connectors'
 
 // FontAwesome
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -97,13 +98,10 @@ const Providers: React.FC<ProvidersProps> = ({
 		<ThemeProvider theme={theme(isDarkMode)}>
 			<GlobalStyle />
 			<UseWalletProvider
-				chainId={3}
-				connectors={{
-					walletconnect: {
-						rpcUrl:
-							'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
-					},
-				}}
+				autoConnect={true}
+				pollBalanceInterval={12000}
+				pollBlockNumberInterval={12000}
+				connectors={connectorsByName}
 			>
 				<BaoProvider>
 					{/* <BasketsProvider> */}

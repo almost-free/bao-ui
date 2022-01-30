@@ -13,7 +13,7 @@ import { getWethPriceLink } from '../bao/utils'
 import useBao from './useBao'
 
 const useComposition = (basket: Basket) => {
-  const { ethereum }: { ethereum: provider } = useWallet()
+  const { ethereum }: { ethereum?: provider } = useWallet()
   const [composition, setComposition] = useState<
     Array<BasketComponent> | undefined
   >()

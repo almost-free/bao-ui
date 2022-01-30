@@ -16,7 +16,7 @@ declare global {
 	interface Window {
 		baosauce: any
 		bao: any
-		ethereum?: any
+		ethereum: any
 	}
 }
 
